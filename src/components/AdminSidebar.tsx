@@ -79,7 +79,7 @@ export function AdminSidebar() {
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <h2 className="font-semibold text-sm text-sidebar-foreground truncate">Veritas Institute</h2>
+            <h2 className="font-semibold text-sm text-sidebar-foreground truncate">Application Management</h2>
             <p className="text-xs text-muted-foreground">Admin Panel</p>
           </div>
         )}

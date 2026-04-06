@@ -1,21 +1,25 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA-xugaUp-q-ckorpS9STvSqukTVXeB3TA",
-  authDomain: "universityportal2026.firebaseapp.com",
-  projectId: "universityportal2026",
-  storageBucket: "universityportal2026.firebasestorage.app",
-  messagingSenderId: "464773454654",
-  appId: "1:464773454654:web:c3507664d238461bebaa6f",
+  apiKey: "AIzaSyBUK60Asm7pgjm0F1P2Lm11gHxJRgZya0g",
+  authDomain: "institution-portal.firebaseapp.com",
+  projectId: "institution-portal",
+  storageBucket: "institution-portal.firebasestorage.app",
+  messagingSenderId: "401202457232",
+  appId: "1:401202457232:web:e20b2bcb51bcb1b6764615",
+  measurementId: "G-HPVGQ393WD",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const analytics =
+  typeof window !== "undefined" ? getAnalytics(app) : undefined;
 
 // Initialize Firebase services
 export const auth = getAuth(app);

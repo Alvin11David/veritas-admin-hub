@@ -224,7 +224,9 @@ export default function ProgramsPage() {
             {
               key: "students",
               label: "Students",
-              render: (item) => <span className="font-semibold">{item.students}</span>,
+              render: (item) => (
+                <span className="font-semibold">{item.students}</span>
+              ),
             },
             {
               key: "status",
@@ -289,7 +291,10 @@ export default function ProgramsPage() {
                   value={form.duration ?? 4}
                   onChange={(e) =>
                     !submitting &&
-                    setForm((f) => ({ ...f, duration: parseInt(e.target.value) }))
+                    setForm((f) => ({
+                      ...f,
+                      duration: parseInt(e.target.value),
+                    }))
                   }
                   disabled={submitting}
                   className="bg-secondary border-border"

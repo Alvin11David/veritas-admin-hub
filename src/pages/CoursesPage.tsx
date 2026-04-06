@@ -110,11 +110,16 @@ export default function CoursesPage() {
   const [courseUnits, setCourseUnits] = useState<CourseUnit[]>([]);
 
   const [programDialogOpen, setProgramDialogOpen] = useState(false);
-  const [programForm, setProgramForm] = useState<ProgramForm>(defaultProgramForm);
+  const [programForm, setProgramForm] =
+    useState<ProgramForm>(defaultProgramForm);
 
   const [courseUnitDialogOpen, setCourseUnitDialogOpen] = useState(false);
-  const [editingCourseUnit, setEditingCourseUnit] = useState<CourseUnit | null>(null);
-  const [courseUnitForm, setCourseUnitForm] = useState<CourseUnitForm>(defaultCourseUnitForm);
+  const [editingCourseUnit, setEditingCourseUnit] = useState<CourseUnit | null>(
+    null,
+  );
+  const [courseUnitForm, setCourseUnitForm] = useState<CourseUnitForm>(
+    defaultCourseUnitForm,
+  );
 
   const selectedProgram = useMemo(
     () => programs.find((program) => program.id === selectedProgramId) || null,
@@ -123,10 +128,20 @@ export default function CoursesPage() {
 
   const semesterOptions = useMemo(() => {
     if (!selectedProgram) {
-      return [] as Array<{ value: string; label: string; yearLevel: number; semesterNumber: number }>;
+      return [] as Array<{
+        value: string;
+        label: string;
+        yearLevel: number;
+        semesterNumber: number;
+      }>;
     }
 
-    const options: Array<{ value: string; label: string; yearLevel: number; semesterNumber: number }> = [];
+    const options: Array<{
+      value: string;
+      label: string;
+      yearLevel: number;
+      semesterNumber: number;
+    }> = [];
     for (let year = 1; year <= selectedProgram.duration; year += 1) {
       for (let semester = 1; semester <= 2; semester += 1) {
         options.push({
@@ -168,7 +183,9 @@ export default function CoursesPage() {
         fetchedPrograms.push({ id: snapshotDoc.id, ...data });
       });
 
-      fetchedPrograms.sort((a, b) => a.programName.localeCompare(b.programName));
+      fetchedPrograms.sort((a, b) =>
+        a.programName.localeCompare(b.programName),
+      );
       setPrograms(fetchedPrograms);
 
       if (fetchedPrograms.length > 0 && !selectedProgramId) {
@@ -185,7 +202,10 @@ export default function CoursesPage() {
       setLoading(true);
 
       const unitsSnapshot = await getDocs(
-        query(collection(db, "AvailableCourses"), where("programId", "==", programId)),
+        query(
+          collection(db, "AvailableCourses"),
+          where("programId", "==", programId),
+        ),
       );
 
       const units: CourseUnit[] = [];
@@ -198,7 +218,8 @@ export default function CoursesPage() {
 
       units.sort((a, b) => {
         if (a.yearLevel !== b.yearLevel) return a.yearLevel - b.yearLevel;
-        if (a.semesterNumber !== b.semesterNumber) return a.semesterNumber - b.semesterNumber;
+        if (a.semesterNumber !== b.semesterNumber)
+          return a.semesterNumber - b.semesterNumber;
         return a.courseCode.localeCompare(b.courseCode);
       });
 
@@ -217,7 +238,12 @@ export default function CoursesPage() {
   };
 
   const handleCreateProgram = async () => {
-    if (!programForm.programName || !programForm.programCode || !programForm.department || !programForm.description) {
+    if (
+      !programForm.programName ||
+      !programForm.programCode ||
+      !programForm.department ||
+      !programForm.description
+    ) {
       toast.error("Fill in all required program fields");
       return;
     }
@@ -273,7 +299,11 @@ export default function CoursesPage() {
       return;
     }
 
-    if (!courseUnitForm.courseCode || !courseUnitForm.courseName || !courseUnitForm.instructor) {
+    if (
+      !courseUnitForm.courseCode ||
+      !courseUnitForm.courseName ||
+      !courseUnitForm.instructor
+    ) {
       toast.error("Fill in all required course unit fields");
       return;
     }
@@ -291,14 +321,20 @@ export default function CoursesPage() {
         credits: Number(courseUnitForm.credits) || 0,
         yearLevel: Number(courseUnitForm.yearLevel),
         semesterNumber: Number(courseUnitForm.semesterNumber),
-        semesterLabel: buildSemesterLabel(Number(courseUnitForm.yearLevel), Number(courseUnitForm.semesterNumber)),
+        semesterLabel: buildSemesterLabel(
+          Number(courseUnitForm.yearLevel),
+          Number(courseUnitForm.semesterNumber),
+        ),
         prerequisites: courseUnitForm.prerequisites,
         status: courseUnitForm.status,
         updatedAt: new Date().toISOString().split("T")[0],
       };
 
       if (editingCourseUnit) {
-        await updateDoc(doc(db, "AvailableCourses", editingCourseUnit.id), payload);
+        await updateDoc(
+          doc(db, "AvailableCourses", editingCourseUnit.id),
+          payload,
+        );
         toast.success("Course unit updated");
       } else {
         await addDoc(collection(db, "AvailableCourses"), {
@@ -356,7 +392,9 @@ export default function CoursesPage() {
               onChange={(event) => setSelectedProgramId(event.target.value)}
               className="w-full h-10 rounded-md border border-border bg-secondary px-3 text-sm"
             >
-              {programs.length === 0 && <option value="">No programs available</option>}
+              {programs.length === 0 && (
+                <option value="">No programs available</option>
+              )}
               {programs.map((program) => (
                 <option key={program.id} value={program.id}>
                   {program.programName} ({program.programCode})
@@ -365,7 +403,8 @@ export default function CoursesPage() {
             </select>
             {selectedProgram && (
               <p className="text-xs text-muted-foreground">
-                {selectedProgram.duration} years {"->"} {selectedProgram.duration * 2} semesters
+                {selectedProgram.duration} years {"->"}{" "}
+                {selectedProgram.duration * 2} semesters
               </p>
             )}
           </div>
@@ -387,7 +426,11 @@ export default function CoursesPage() {
         </div>
       ) : (
         <DataTable
-          title={selectedProgram ? `${selectedProgram.programName} Course Units` : "Course Units"}
+          title={
+            selectedProgram
+              ? `${selectedProgram.programName} Course Units`
+              : "Course Units"
+          }
           data={courseUnits}
           searchKey="courseName"
           onAdd={openCreateCourseUnit}
@@ -397,12 +440,18 @@ export default function CoursesPage() {
             {
               key: "courseCode",
               label: "Code",
-              render: (item) => <span className="font-mono font-semibold">{item.courseCode}</span>,
+              render: (item) => (
+                <span className="font-mono font-semibold">
+                  {item.courseCode}
+                </span>
+              ),
             },
             {
               key: "courseName",
               label: "Course Unit",
-              render: (item) => <span className="font-medium">{item.courseName}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.courseName}</span>
+              ),
             },
             {
               key: "semesterLabel",
@@ -411,7 +460,9 @@ export default function CoursesPage() {
             {
               key: "instructor",
               label: "Instructor",
-              render: (item) => <span className="text-muted-foreground">{item.instructor}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.instructor}</span>
+              ),
             },
             {
               key: "credits",
@@ -421,7 +472,9 @@ export default function CoursesPage() {
               key: "status",
               label: "Status",
               render: (item) => (
-                <Badge variant={item.status === "active" ? "default" : "secondary"}>
+                <Badge
+                  variant={item.status === "active" ? "default" : "secondary"}
+                >
                   {item.status === "active" ? "Active" : "Inactive"}
                 </Badge>
               ),
@@ -430,7 +483,10 @@ export default function CoursesPage() {
         />
       )}
 
-      <Dialog open={programDialogOpen} onOpenChange={(open) => !submitting && setProgramDialogOpen(open)}>
+      <Dialog
+        open={programDialogOpen}
+        onOpenChange={(open) => !submitting && setProgramDialogOpen(open)}
+      >
         <DialogContent className="bg-card border-border max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add Program</DialogTitle>
@@ -442,7 +498,12 @@ export default function CoursesPage() {
                 <Label>Program Name *</Label>
                 <Input
                   value={programForm.programName}
-                  onChange={(event) => setProgramForm((previous) => ({ ...previous, programName: event.target.value }))}
+                  onChange={(event) =>
+                    setProgramForm((previous) => ({
+                      ...previous,
+                      programName: event.target.value,
+                    }))
+                  }
                   placeholder="Bachelor of Computer Science"
                   disabled={submitting}
                 />
@@ -451,7 +512,12 @@ export default function CoursesPage() {
                 <Label>Program Code *</Label>
                 <Input
                   value={programForm.programCode}
-                  onChange={(event) => setProgramForm((previous) => ({ ...previous, programCode: event.target.value }))}
+                  onChange={(event) =>
+                    setProgramForm((previous) => ({
+                      ...previous,
+                      programCode: event.target.value,
+                    }))
+                  }
                   placeholder="BCS"
                   disabled={submitting}
                 />
@@ -463,7 +529,12 @@ export default function CoursesPage() {
                 <Label>Department *</Label>
                 <Input
                   value={programForm.department}
-                  onChange={(event) => setProgramForm((previous) => ({ ...previous, department: event.target.value }))}
+                  onChange={(event) =>
+                    setProgramForm((previous) => ({
+                      ...previous,
+                      department: event.target.value,
+                    }))
+                  }
                   placeholder="School of Computing"
                   disabled={submitting}
                 />
@@ -475,7 +546,12 @@ export default function CoursesPage() {
                   min="1"
                   max="6"
                   value={programForm.duration}
-                  onChange={(event) => setProgramForm((previous) => ({ ...previous, duration: Number(event.target.value) || 1 }))}
+                  onChange={(event) =>
+                    setProgramForm((previous) => ({
+                      ...previous,
+                      duration: Number(event.target.value) || 1,
+                    }))
+                  }
                   disabled={submitting}
                 />
               </div>
@@ -485,7 +561,12 @@ export default function CoursesPage() {
               <Label>Description *</Label>
               <Textarea
                 value={programForm.description}
-                onChange={(event) => setProgramForm((previous) => ({ ...previous, description: event.target.value }))}
+                onChange={(event) =>
+                  setProgramForm((previous) => ({
+                    ...previous,
+                    description: event.target.value,
+                  }))
+                }
                 placeholder="Program overview"
                 disabled={submitting}
               />
@@ -498,7 +579,12 @@ export default function CoursesPage() {
                   type="number"
                   min="1"
                   value={programForm.totalCredits}
-                  onChange={(event) => setProgramForm((previous) => ({ ...previous, totalCredits: Number(event.target.value) || 0 }))}
+                  onChange={(event) =>
+                    setProgramForm((previous) => ({
+                      ...previous,
+                      totalCredits: Number(event.target.value) || 0,
+                    }))
+                  }
                   disabled={submitting}
                 />
               </div>
@@ -507,16 +593,27 @@ export default function CoursesPage() {
                 <div className="flex items-center gap-2 h-10">
                   <Switch
                     checked={programForm.status === "active"}
-                    onCheckedChange={(checked) => setProgramForm((previous) => ({ ...previous, status: checked ? "active" : "inactive" }))}
+                    onCheckedChange={(checked) =>
+                      setProgramForm((previous) => ({
+                        ...previous,
+                        status: checked ? "active" : "inactive",
+                      }))
+                    }
                     disabled={submitting}
                   />
-                  <span className="text-sm">{programForm.status === "active" ? "Active" : "Inactive"}</span>
+                  <span className="text-sm">
+                    {programForm.status === "active" ? "Active" : "Inactive"}
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={() => setProgramDialogOpen(false)} disabled={submitting}>
+              <Button
+                variant="outline"
+                onClick={() => setProgramDialogOpen(false)}
+                disabled={submitting}
+              >
                 Cancel
               </Button>
               <Button onClick={handleCreateProgram} disabled={submitting}>
@@ -527,10 +624,15 @@ export default function CoursesPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={courseUnitDialogOpen} onOpenChange={(open) => !submitting && setCourseUnitDialogOpen(open)}>
+      <Dialog
+        open={courseUnitDialogOpen}
+        onOpenChange={(open) => !submitting && setCourseUnitDialogOpen(open)}
+      >
         <DialogContent className="bg-card border-border max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingCourseUnit ? "Edit Course Unit" : "Add Course Unit"}</DialogTitle>
+            <DialogTitle>
+              {editingCourseUnit ? "Edit Course Unit" : "Add Course Unit"}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
@@ -539,7 +641,12 @@ export default function CoursesPage() {
                 <Label>Course Code *</Label>
                 <Input
                   value={courseUnitForm.courseCode}
-                  onChange={(event) => setCourseUnitForm((previous) => ({ ...previous, courseCode: event.target.value }))}
+                  onChange={(event) =>
+                    setCourseUnitForm((previous) => ({
+                      ...previous,
+                      courseCode: event.target.value,
+                    }))
+                  }
                   placeholder="CSC101"
                   disabled={submitting}
                 />
@@ -551,7 +658,12 @@ export default function CoursesPage() {
                   min="1"
                   max="6"
                   value={courseUnitForm.credits}
-                  onChange={(event) => setCourseUnitForm((previous) => ({ ...previous, credits: Number(event.target.value) || 0 }))}
+                  onChange={(event) =>
+                    setCourseUnitForm((previous) => ({
+                      ...previous,
+                      credits: Number(event.target.value) || 0,
+                    }))
+                  }
                   disabled={submitting}
                 />
               </div>
@@ -561,7 +673,12 @@ export default function CoursesPage() {
               <Label>Course Unit Name *</Label>
               <Input
                 value={courseUnitForm.courseName}
-                onChange={(event) => setCourseUnitForm((previous) => ({ ...previous, courseName: event.target.value }))}
+                onChange={(event) =>
+                  setCourseUnitForm((previous) => ({
+                    ...previous,
+                    courseName: event.target.value,
+                  }))
+                }
                 placeholder="Introduction to Programming"
                 disabled={submitting}
               />
@@ -572,7 +689,12 @@ export default function CoursesPage() {
                 <Label>Instructor *</Label>
                 <Input
                   value={courseUnitForm.instructor}
-                  onChange={(event) => setCourseUnitForm((previous) => ({ ...previous, instructor: event.target.value }))}
+                  onChange={(event) =>
+                    setCourseUnitForm((previous) => ({
+                      ...previous,
+                      instructor: event.target.value,
+                    }))
+                  }
                   placeholder="Dr. Jane Doe"
                   disabled={submitting}
                 />
@@ -598,7 +720,12 @@ export default function CoursesPage() {
               <Label>Prerequisites</Label>
               <Input
                 value={courseUnitForm.prerequisites}
-                onChange={(event) => setCourseUnitForm((previous) => ({ ...previous, prerequisites: event.target.value }))}
+                onChange={(event) =>
+                  setCourseUnitForm((previous) => ({
+                    ...previous,
+                    prerequisites: event.target.value,
+                  }))
+                }
                 placeholder="CSC100"
                 disabled={submitting}
               />
@@ -609,15 +736,26 @@ export default function CoursesPage() {
               <div className="flex items-center gap-2">
                 <Switch
                   checked={courseUnitForm.status === "active"}
-                  onCheckedChange={(checked) => setCourseUnitForm((previous) => ({ ...previous, status: checked ? "active" : "inactive" }))}
+                  onCheckedChange={(checked) =>
+                    setCourseUnitForm((previous) => ({
+                      ...previous,
+                      status: checked ? "active" : "inactive",
+                    }))
+                  }
                   disabled={submitting}
                 />
-                <span className="text-sm">{courseUnitForm.status === "active" ? "Active" : "Inactive"}</span>
+                <span className="text-sm">
+                  {courseUnitForm.status === "active" ? "Active" : "Inactive"}
+                </span>
               </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={() => setCourseUnitDialogOpen(false)} disabled={submitting}>
+              <Button
+                variant="outline"
+                onClick={() => setCourseUnitDialogOpen(false)}
+                disabled={submitting}
+              >
                 Cancel
               </Button>
               <Button onClick={handleSubmitCourseUnit} disabled={submitting}>
