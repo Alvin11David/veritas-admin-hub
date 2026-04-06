@@ -2,7 +2,12 @@ import { useState, useRef } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "@/config/firebase";
 
 export interface MediaFile {
@@ -21,7 +26,12 @@ interface MediaUploadProps {
   articleId: string;
 }
 
-export function MediaUpload({ onMediaAdded, onMediaRemoved, media, articleId }: MediaUploadProps) {
+export function MediaUpload({
+  onMediaAdded,
+  onMediaRemoved,
+  media,
+  articleId,
+}: MediaUploadProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +41,11 @@ export function MediaUpload({ onMediaAdded, onMediaRemoved, media, articleId }: 
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const fileType = file.type.startsWith("image/") ? "image" : file.type.startsWith("video/") ? "video" : null;
+      const fileType = file.type.startsWith("image/")
+        ? "image"
+        : file.type.startsWith("video/")
+          ? "video"
+          : null;
 
       if (!fileType) {
         toast.error(`${file.name} is not a valid image or video file`);
@@ -67,7 +81,9 @@ export function MediaUpload({ onMediaAdded, onMediaRemoved, media, articleId }: 
       };
 
       onMediaAdded(mediaFile);
-      toast.success(`${fileType === "image" ? "Image" : "Video"} uploaded successfully`);
+      toast.success(
+        `${fileType === "image" ? "Image" : "Video"} uploaded successfully`,
+      );
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("Failed to upload file");
@@ -79,8 +95,11 @@ export function MediaUpload({ onMediaAdded, onMediaRemoved, media, articleId }: 
   const handleRemoveMedia = async (mediaFile: MediaFile) => {
     try {
       setUploading(true);
-      const fileRef = ref(storage, `/news-media/${mediaFile.uploadedAt}/${mediaFile.fileName}`);
-      
+      const fileRef = ref(
+        storage,
+        `/news-media/${mediaFile.uploadedAt}/${mediaFile.fileName}`,
+      );
+
       // Try to delete from Firebase Storage
       try {
         await deleteObject(fileRef);
@@ -135,7 +154,10 @@ export function MediaUpload({ onMediaAdded, onMediaRemoved, media, articleId }: 
       {media.length > 0 && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {media.map((item) => (
-            <div key={item.id} className="relative group rounded-lg overflow-hidden bg-muted h-32">
+            <div
+              key={item.id}
+              className="relative group rounded-lg overflow-hidden bg-muted h-32"
+            >
               {item.type === "image" ? (
                 <img
                   src={item.url}
