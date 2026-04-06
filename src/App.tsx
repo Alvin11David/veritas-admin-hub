@@ -9,6 +9,8 @@ import NewsPage from "@/pages/NewsPage";
 import FacultyPage from "@/pages/FacultyPage";
 import EventsPage from "@/pages/EventsPage";
 import SubmissionsPage from "@/pages/SubmissionsPage";
+import ProgramsPage from "@/pages/ProgramsPage";
+import CoursesPage from "@/pages/CoursesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -27,10 +29,10 @@ const App = () => (
             <Route path="/faculty" element={<FacultyPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/submissions" element={<SubmissionsPage />} />
-            <Route path="/courses" element={<PlaceholderPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/programs" element={<ProgramsPage />} />
             <Route path="/gallery" element={<PlaceholderPage />} />
             <Route path="/faqs" element={<PlaceholderPage />} />
-            <Route path="/programs" element={<PlaceholderPage />} />
             <Route path="/quick-links" element={<PlaceholderPage />} />
             <Route path="/research" element={<PlaceholderPage />} />
             <Route path="/alumni" element={<PlaceholderPage />} />

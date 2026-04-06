@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { DataTable } from "@/components/DataTable";
-import { FormDialog, FormField } from "@/components/FormDialog";
 import { MediaUpload, MediaFile } from "@/components/MediaUpload";
 import { NewsArticle } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +10,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { X, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { db } from "@/config/firebase";
 import {
   collection,
@@ -24,28 +27,10 @@ import {
   doc,
 } from "firebase/firestore";
 
-const fields: FormField[] = [
-  { key: "title", label: "Title", type: "text", placeholder: "Article title" },
-  {
-    key: "excerpt",
-    label: "Excerpt",
-    type: "text",
-    placeholder: "Brief description",
-  },
-  {
-    key: "content",
-    label: "Content",
-    type: "textarea",
-    placeholder: "Full article content...",
-  },
-  { key: "published", label: "Published", type: "toggle" },
-];
-
 export default function NewsPage() {
   const [data, setData] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mediaDialogOpen, setMediaDialogOpen] = useState(false);
   const [editing, setEditing] = useState<NewsArticle | null>(null);
   const [form, setForm] = useState<Record<string, any>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -99,12 +84,6 @@ export default function NewsPage() {
     setEditing(item);
     setForm({ ...item, media: item.media || [] });
     setDialogOpen(true);
-  };
-
-  const openMediaManager = (item: NewsArticle) => {
-    setEditing(item);
-    setForm({ ...item, media: item.media || [] });
-    setMediaDialogOpen(true);
   };
 
   const handleSubmit = async () => {
@@ -167,26 +146,6 @@ export default function NewsPage() {
     }));
   };
 
-  const handleSaveMedia = async () => {
-    if (!editing) return;
-
-    try {
-      setSubmitting(true);
-      const docRef = doc(db, "NewsArticles", editing.id);
-      await updateDoc(docRef, {
-        media: form.media || [],
-      });
-      toast.success("Media updated");
-      await fetchArticles();
-      setMediaDialogOpen(false);
-    } catch (error) {
-      console.error("Error updating media:", error);
-      toast.error("Failed to update media");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const handleDelete = async (item: NewsArticle) => {
     try {
       const docRef = doc(db, "NewsArticles", item.id);
@@ -237,21 +196,9 @@ export default function NewsPage() {
               key: "media",
               label: "Media",
               render: (item) => (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    {item.media?.length || 0} files
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openMediaManager(item);
-                    }}
-                  >
-                    Manage
-                  </Button>
-                </div>
+                <span className="text-sm text-muted-foreground">
+                  {item.media?.length || 0} files
+                </span>
               ),
             },
             {
@@ -272,49 +219,112 @@ export default function NewsPage() {
           ]}
         />
       )}
-      <FormDialog
-        open={dialogOpen}
-        onClose={() => !submitting && setDialogOpen(false)}
-        title={editing ? "Edit Article" : "New Article"}
-        fields={fields}
-        values={form}
-        onChange={(k, v) => !submitting && setForm((f) => ({ ...f, [k]: v }))}
-        onSubmit={handleSubmit}
-        submitLabel={submitting ? "Saving..." : "Save"}
-        disabled={submitting}
-      />
-
       <Dialog
-        open={mediaDialogOpen}
-        onOpenChange={(open) => !submitting && setMediaDialogOpen(open)}
+        open={dialogOpen}
+        onOpenChange={(open) => !submitting && setDialogOpen(open)}
       >
         <DialogContent className="bg-card border-border max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Manage Media - {editing?.title}</DialogTitle>
+            <DialogTitle>
+              {editing ? "Edit Article" : "New Article"}
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <MediaUpload
-              articleId={editing?.id || ""}
-              media={form.media || []}
-              onMediaAdded={handleMediaAdded}
-              onMediaRemoved={handleMediaRemoved}
-            />
-            <div className="flex justify-end gap-2">
+          <div className="space-y-4 pt-2">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Title</Label>
+              <Input
+                type="text"
+                placeholder="Article title"
+                value={form.title ?? ""}
+                onChange={(e) =>
+                  !submitting &&
+                  setForm((f) => ({ ...f, title: e.target.value }))
+                }
+                disabled={submitting}
+                className="bg-secondary border-border"
+              />
+            </div>
+
+            {/* Excerpt */}
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Excerpt</Label>
+              <Input
+                type="text"
+                placeholder="Brief description"
+                value={form.excerpt ?? ""}
+                onChange={(e) =>
+                  !submitting &&
+                  setForm((f) => ({ ...f, excerpt: e.target.value }))
+                }
+                disabled={submitting}
+                className="bg-secondary border-border"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Content</Label>
+              <Textarea
+                placeholder="Full article content..."
+                value={form.content ?? ""}
+                onChange={(e) =>
+                  !submitting &&
+                  setForm((f) => ({ ...f, content: e.target.value }))
+                }
+                disabled={submitting}
+                className="bg-secondary border-border min-h-[100px]"
+              />
+            </div>
+
+            {/* Published Toggle */}
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Published</Label>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={!!form.published}
+                  onCheckedChange={(v) =>
+                    !submitting && setForm((f) => ({ ...f, published: v }))
+                  }
+                  disabled={submitting}
+                />
+                <span className="text-sm text-foreground">
+                  {form.published ? "Published" : "Draft"}
+                </span>
+              </div>
+            </div>
+
+            {/* Media Upload */}
+            <div className="space-y-2 border-t border-border pt-4">
+              <Label className="text-sm text-muted-foreground">
+                Images & Videos
+              </Label>
+              <MediaUpload
+                articleId={editing?.id || "new"}
+                media={form.media || []}
+                onMediaAdded={handleMediaAdded}
+                onMediaRemoved={handleMediaRemoved}
+              />
+            </div>
+
+            {/* Submit Buttons */}
+            <div className="flex justify-end gap-2 pt-2">
               <Button
                 variant="outline"
-                onClick={() => setMediaDialogOpen(false)}
+                onClick={() => setDialogOpen(false)}
                 disabled={submitting}
+                className="border-border"
               >
                 Cancel
               </Button>
-              <Button onClick={handleSaveMedia} disabled={submitting}>
+              <Button onClick={handleSubmit} disabled={submitting}>
                 {submitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Saving...
                   </>
                 ) : (
-                  "Save Media"
+                  "Save Article"
                 )}
               </Button>
             </div>
