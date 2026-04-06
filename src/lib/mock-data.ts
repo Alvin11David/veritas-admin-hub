@@ -7,6 +7,14 @@ export interface NewsArticle {
   published: boolean;
   createdAt: string;
   updatedAt: string;
+  media?: Array<{
+    id: string;
+    url: string;
+    fileName: string;
+    type: "image" | "video";
+    size: number;
+    uploadedAt: string;
+  }>;
 }
 
 export interface FacultyMember {
