@@ -3,7 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
+import { AdminLayout } from "@/components/AdminLayout";
+import Dashboard from "@/pages/Dashboard";
+import NewsPage from "@/pages/NewsPage";
+import FacultyPage from "@/pages/FacultyPage";
+import EventsPage from "@/pages/EventsPage";
+import SubmissionsPage from "@/pages/SubmissionsPage";
+import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -15,8 +21,24 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route element={<AdminLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/faculty" element={<FacultyPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/submissions" element={<SubmissionsPage />} />
+            <Route path="/courses" element={<PlaceholderPage />} />
+            <Route path="/gallery" element={<PlaceholderPage />} />
+            <Route path="/faqs" element={<PlaceholderPage />} />
+            <Route path="/programs" element={<PlaceholderPage />} />
+            <Route path="/quick-links" element={<PlaceholderPage />} />
+            <Route path="/research" element={<PlaceholderPage />} />
+            <Route path="/alumni" element={<PlaceholderPage />} />
+            <Route path="/scholarships" element={<PlaceholderPage />} />
+            <Route path="/student-stories" element={<PlaceholderPage />} />
+            <Route path="/legal" element={<PlaceholderPage />} />
+            <Route path="/settings" element={<PlaceholderPage />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
