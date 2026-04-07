@@ -187,10 +187,6 @@ export default function CoursesPage() {
         a.programName.localeCompare(b.programName),
       );
       setPrograms(fetchedPrograms);
-
-      if (fetchedPrograms.length > 0 && !selectedProgramId) {
-        setSelectedProgramId(fetchedPrograms[0].id);
-      }
     } catch (error) {
       console.error("Error loading programs:", error);
       toast.error("Failed to load programs");
@@ -250,7 +246,7 @@ export default function CoursesPage() {
 
     try {
       setSubmitting(true);
-      await addDoc(collection(db, "AcademicPrograms"), {
+      const createdProgram = await addDoc(collection(db, "AcademicPrograms"), {
         ...programForm,
         programCode: programForm.programCode.toUpperCase(),
         createdAt: new Date().toISOString().split("T")[0],
@@ -259,6 +255,7 @@ export default function CoursesPage() {
       toast.success("Program added");
       setProgramDialogOpen(false);
       await fetchPrograms();
+      setSelectedProgramId(createdProgram.id);
     } catch (error) {
       console.error("Error adding program:", error);
       toast.error("Failed to add program");
@@ -392,9 +389,7 @@ export default function CoursesPage() {
               onChange={(event) => setSelectedProgramId(event.target.value)}
               className="w-full h-10 rounded-md border border-border bg-secondary px-3 text-sm"
             >
-              {programs.length === 0 && (
-                <option value="">No programs available</option>
-              )}
+              <option value="">Select a program</option>
               {programs.map((program) => (
                 <option key={program.id} value={program.id}>
                   {program.programName} ({program.programCode})
@@ -408,11 +403,13 @@ export default function CoursesPage() {
               </p>
             )}
           </div>
-          <Button variant="outline" onClick={openProgramDialog}>
-            Add Program First
-          </Button>
           <Button onClick={openCreateCourseUnit} disabled={!selectedProgram}>
             Add Course Unit
+          </Button>
+        </div>
+        <div className="flex justify-center pt-4">
+          <Button variant="outline" onClick={openProgramDialog}>
+            Add Program First
           </Button>
         </div>
       </div>

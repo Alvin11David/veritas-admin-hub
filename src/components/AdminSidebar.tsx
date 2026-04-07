@@ -1,19 +1,36 @@
 import {
-  LayoutDashboard, Newspaper, BookOpen, Users, Calendar,
-  Image, HelpCircle, Link, FlaskConical, Award, DollarSign,
-  MessageSquare, FileText, Mail, Settings, GraduationCap,
+  LayoutDashboard,
+  Newspaper,
+  BookOpen,
+  Users,
+  Calendar,
+  Image,
+  HelpCircle,
+  Link,
+  FlaskConical,
+  Award,
+  DollarSign,
+  MessageSquare,
+  FileText,
+  Mail,
+  Settings,
+  GraduationCap,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-];
+const mainItems = [{ title: "Dashboard", url: "/", icon: LayoutDashboard }];
 
 const contentItems = [
   { title: "News & Articles", url: "/news", icon: Newspaper },
@@ -36,14 +53,24 @@ const systemItems = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
-function SidebarSection({ label, items }: { label: string; items: typeof mainItems }) {
+function SidebarSection({
+  label,
+  items,
+}: {
+  label: string;
+  items: typeof mainItems;
+}) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
 
   return (
     <SidebarGroup>
-      {!collapsed && <SidebarGroupLabel className="text-muted-foreground/60 text-xs uppercase tracking-wider">{label}</SidebarGroupLabel>}
+      {!collapsed && (
+        <SidebarGroupLabel className="text-muted-foreground/60 text-xs uppercase tracking-wider">
+          {label}
+        </SidebarGroupLabel>
+      )}
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -79,7 +106,9 @@ export function AdminSidebar() {
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <h2 className="font-semibold text-sm text-sidebar-foreground truncate">Application Management</h2>
+            <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
+              Application Management
+            </h2>
             <p className="text-xs text-muted-foreground">Admin Panel</p>
           </div>
         )}
