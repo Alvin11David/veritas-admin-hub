@@ -136,6 +136,25 @@ export default function FacultyPage() {
     void fetchFaculty();
   }, []);
 
+  const queueFacultyAddedEmail = async (payload: {
+    name: string;
+    email: string;
+    title: string;
+    department: string;
+  }) => {
+    const subject = "You have been added to Veritas Admin";
+    const role = `${payload.title} - ${payload.department}`;
+
+    await addDoc(collection(db, "mail"), {
+      to: [payload.email],
+      message: {
+        subject,
+        text: `Hello ${payload.name},\n\nYou have been added to the Veritas Admin system.\nRole: ${role}\n\nSender: Admin Notification`,
+        html: `<p>Hello ${payload.name},</p><p>You have been added to the Veritas Admin system.</p><p><strong>Role:</strong> ${role}</p><p>Sender: Admin Notification</p>`,
+      },
+    });
+  };
+
   const fetchFaculty = async () => {
     try {
       setLoading(true);
@@ -212,6 +231,19 @@ export default function FacultyPage() {
           ...payload,
           createdAt: new Date().toISOString().split("T")[0],
         });
+
+        try {
+          await queueFacultyAddedEmail({
+            name: payload.name,
+            email: payload.email,
+            title: payload.title,
+            department: payload.department,
+          });
+        } catch (mailError) {
+          console.error("Error queueing email notification:", mailError);
+          toast.warning("Faculty was added, but notification email could not be queued");
+        }
+
         toast.success("Faculty member added");
       }
 
