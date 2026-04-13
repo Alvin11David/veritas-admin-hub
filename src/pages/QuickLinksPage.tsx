@@ -171,7 +171,10 @@ export default function QuickLinksPage() {
             module: "quick-links",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Quick link updated");
       } else {
@@ -187,7 +190,10 @@ export default function QuickLinksPage() {
             module: "quick-links",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Quick link created");
       }
@@ -213,7 +219,10 @@ export default function QuickLinksPage() {
           module: "quick-links",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Quick link deleted");
       await fetchQuickLinks();
@@ -244,7 +253,9 @@ export default function QuickLinksPage() {
             {
               key: "title",
               label: "Title",
-              render: (item) => <span className="font-medium">{item.title}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.title}</span>
+              ),
             },
             {
               key: "url",
@@ -263,7 +274,9 @@ export default function QuickLinksPage() {
             {
               key: "category",
               label: "Category",
-              render: (item) => <span className="text-muted-foreground">{item.category}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.category}</span>
+              ),
             },
             {
               key: "active",
@@ -271,7 +284,9 @@ export default function QuickLinksPage() {
               render: (item) => (
                 <Badge
                   variant={item.active ? "default" : "secondary"}
-                  className={item.active ? "bg-success/20 text-success border-0" : ""}
+                  className={
+                    item.active ? "bg-success/20 text-success border-0" : ""
+                  }
                 >
                   {item.active ? "Active" : "Inactive"}
                 </Badge>
