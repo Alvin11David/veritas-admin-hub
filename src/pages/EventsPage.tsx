@@ -4,6 +4,7 @@ import { FormDialog, FormField } from "@/components/FormDialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { db } from "@/config/firebase";
+import { createAdminNotification } from "@/lib/notifications";
 import {
   addDoc,
   collection,
@@ -151,12 +152,32 @@ export default function EventsPage() {
 
       if (editing) {
         await updateDoc(doc(db, "events", editing.id), payload);
+        try {
+          await createAdminNotification({
+            action: "Updated",
+            target: payload.title,
+            type: "update",
+            module: "events",
+          });
+        } catch (notificationError) {
+          console.error("Error creating activity notification:", notificationError);
+        }
         toast.success("Event updated");
       } else {
         await addDoc(collection(db, "events"), {
           ...payload,
           createdAt: new Date().toISOString().split("T")[0],
         });
+        try {
+          await createAdminNotification({
+            action: "Created",
+            target: payload.title,
+            type: "create",
+            module: "events",
+          });
+        } catch (notificationError) {
+          console.error("Error creating activity notification:", notificationError);
+        }
         toast.success("Event created");
       }
 
@@ -173,6 +194,16 @@ export default function EventsPage() {
   const handleDelete = async (item: EventItem) => {
     try {
       await deleteDoc(doc(db, "events", item.id));
+      try {
+        await createAdminNotification({
+          action: "Deleted",
+          target: item.title,
+          type: "delete",
+          module: "events",
+        });
+      } catch (notificationError) {
+        console.error("Error creating activity notification:", notificationError);
+      }
       toast.success("Event deleted");
       await fetchEvents();
     } catch (error) {
