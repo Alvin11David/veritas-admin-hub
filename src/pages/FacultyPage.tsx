@@ -155,6 +155,38 @@ export default function FacultyPage() {
     });
   };
 
+  const createFacultyMemberWithNotification = async (payload: {
+    name: string;
+    title: string;
+    department: string;
+    email: string;
+    specialization: string;
+    bio: string;
+    photoUrl: string;
+    displayOrder: number;
+    updatedAt: string;
+  }) => {
+    const createdRef = await addDoc(collection(db, "faculty"), {
+      ...payload,
+      createdAt: new Date().toISOString().split("T")[0],
+    });
+
+    let emailQueued = true;
+    try {
+      await queueFacultyAddedEmail({
+        name: payload.name,
+        email: payload.email,
+        title: payload.title,
+        department: payload.department,
+      });
+    } catch (mailError) {
+      emailQueued = false;
+      console.error("Error queueing email notification:", mailError);
+    }
+
+    return { createdId: createdRef.id, emailQueued };
+  };
+
   const fetchFaculty = async () => {
     try {
       setLoading(true);
@@ -227,20 +259,11 @@ export default function FacultyPage() {
         await updateDoc(doc(db, "faculty", editing.id), payload);
         toast.success("Faculty member updated");
       } else {
-        await addDoc(collection(db, "faculty"), {
-          ...payload,
-          createdAt: new Date().toISOString().split("T")[0],
-        });
+        const { emailQueued } = await createFacultyMemberWithNotification(
+          payload,
+        );
 
-        try {
-          await queueFacultyAddedEmail({
-            name: payload.name,
-            email: payload.email,
-            title: payload.title,
-            department: payload.department,
-          });
-        } catch (mailError) {
-          console.error("Error queueing email notification:", mailError);
+        if (!emailQueued) {
           toast.warning(
             "Faculty was added, but notification email could not be queued",
           );
