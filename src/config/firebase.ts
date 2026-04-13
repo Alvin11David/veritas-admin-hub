@@ -26,9 +26,13 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+const useFirestoreEmulator = import.meta.env.VITE_USE_FIRESTORE_EMULATOR === "true";
+const firestoreEmulatorHost = import.meta.env.VITE_FIRESTORE_EMULATOR_HOST || "localhost";
+const firestoreEmulatorPort = Number(import.meta.env.VITE_FIRESTORE_EMULATOR_PORT || "8080");
+
+if (useFirestoreEmulator) {
   try {
-    connectFirestoreEmulator(db, "localhost", 8080);
+    connectFirestoreEmulator(db, firestoreEmulatorHost, firestoreEmulatorPort);
   } catch {
     // Ignore emulator re-connection errors during hot reload.
   }
