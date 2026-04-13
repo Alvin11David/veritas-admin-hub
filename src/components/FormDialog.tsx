@@ -76,7 +76,9 @@ export function FormDialog({
                 <>
                   <Input
                     type={field.type}
-                    list={field.options?.length ? `${field.key}-options` : undefined}
+                    list={
+                      field.options?.length ? `${field.key}-options` : undefined
+                    }
                     placeholder={field.placeholder}
                     value={values[field.key] ?? ""}
                     onChange={(e) =>
