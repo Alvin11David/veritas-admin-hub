@@ -1,8 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/DataTable";
 import { FormDialog, FormField } from "@/components/FormDialog";
-import { mockFaculty, FacultyMember } from "@/lib/mock-data";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { db } from "@/config/firebase";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+
+interface FacultyMember {
+  id: string;
+  name: string;
+  title: string;
+  department: string;
+  email: string;
+  bio: string;
+  specialization: string;
+  photoUrl: string;
+  displayOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface FacultyForm {
+  name: string;
+  title: string;
+  department: string;
+  email: string;
+  specialization: string;
+  bio: string;
+  photoUrl: string;
+  displayOrder: number;
+}
 
 const fields: FormField[] = [
   { key: "name", label: "Full Name", type: "text", placeholder: "Dr. Jane Doe" },
@@ -11,68 +46,169 @@ const fields: FormField[] = [
   { key: "email", label: "Email", type: "email", placeholder: "name@veritas.edu" },
   { key: "specialization", label: "Specialization", type: "text", placeholder: "Area of expertise" },
   { key: "bio", label: "Biography", type: "textarea", placeholder: "Brief bio..." },
+  { key: "photoUrl", label: "Photo URL", type: "text", placeholder: "https://..." },
   { key: "displayOrder", label: "Display Order", type: "number", placeholder: "1" },
 ];
 
+const defaultForm: FacultyForm = {
+  name: "",
+  title: "",
+  department: "",
+  email: "",
+  specialization: "",
+  bio: "",
+  photoUrl: "",
+  displayOrder: 1,
+};
+
 export default function FacultyPage() {
-  const [data, setData] = useState<FacultyMember[]>(mockFaculty);
+  const [data, setData] = useState<FacultyMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<FacultyMember | null>(null);
-  const [form, setForm] = useState<Record<string, any>>({});
+  const [form, setForm] = useState<FacultyForm>(defaultForm);
+
+  useEffect(() => {
+    void fetchFaculty();
+  }, []);
+
+  const fetchFaculty = async () => {
+    try {
+      setLoading(true);
+      const snapshot = await getDocs(query(collection(db, "faculty")));
+      const faculty: FacultyMember[] = [];
+
+      snapshot.forEach((snapshotDoc) => {
+        faculty.push({
+          id: snapshotDoc.id,
+          ...(snapshotDoc.data() as Omit<FacultyMember, "id">),
+        });
+      });
+
+      faculty.sort((a, b) => {
+        const orderDiff = (a.displayOrder || 0) - (b.displayOrder || 0);
+        if (orderDiff !== 0) return orderDiff;
+        return a.name.localeCompare(b.name);
+      });
+      setData(faculty);
+    } catch (error) {
+      console.error("Error loading faculty:", error);
+      toast.error("Failed to load faculty members");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", title: "", department: "", email: "", specialization: "", bio: "", displayOrder: data.length + 1 });
+    setForm({ ...defaultForm, displayOrder: data.length + 1 });
     setDialogOpen(true);
   };
 
   const openEdit = (item: FacultyMember) => {
     setEditing(item);
-    setForm({ ...item });
+    setForm({
+      name: item.name,
+      title: item.title,
+      department: item.department,
+      email: item.email,
+      specialization: item.specialization,
+      bio: item.bio,
+      photoUrl: item.photoUrl ?? "",
+      displayOrder: item.displayOrder ?? 1,
+    });
     setDialogOpen(true);
   };
 
-  const handleSubmit = () => {
-    if (editing) {
-      setData((d) => d.map((i) => (i.id === editing.id ? { ...i, ...form } : i)));
-      toast.success("Faculty member updated");
-    } else {
-      setData((d) => [...d, { ...form as any, id: Date.now().toString(), photoUrl: "" }]);
-      toast.success("Faculty member added");
+  const handleSubmit = async () => {
+    if (!form.name || !form.title || !form.department || !form.email) {
+      toast.error("Please fill in all required fields");
+      return;
     }
-    setDialogOpen(false);
+
+    try {
+      setSubmitting(true);
+      const payload = {
+        name: form.name,
+        title: form.title,
+        department: form.department,
+        email: form.email,
+        specialization: form.specialization,
+        bio: form.bio,
+        photoUrl: form.photoUrl,
+        displayOrder: Number(form.displayOrder) || 1,
+        updatedAt: new Date().toISOString().split("T")[0],
+      };
+
+      if (editing) {
+        await updateDoc(doc(db, "faculty", editing.id), payload);
+        toast.success("Faculty member updated");
+      } else {
+        await addDoc(collection(db, "faculty"), {
+          ...payload,
+          createdAt: new Date().toISOString().split("T")[0],
+        });
+        toast.success("Faculty member added");
+      }
+
+      await fetchFaculty();
+      setDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving faculty:", error);
+      toast.error("Failed to save faculty member");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleDelete = (item: FacultyMember) => {
-    setData((d) => d.filter((i) => i.id !== item.id));
-    toast.success("Faculty member removed");
+  const handleDelete = async (item: FacultyMember) => {
+    try {
+      await deleteDoc(doc(db, "faculty", item.id));
+      toast.success("Faculty member removed");
+      await fetchFaculty();
+    } catch (error) {
+      console.error("Error deleting faculty:", error);
+      toast.error("Failed to remove faculty member");
+    }
   };
 
   return (
     <>
-      <DataTable
-        title="Faculty Members"
-        data={data}
-        searchKey="name"
-        onAdd={openCreate}
-        onEdit={openEdit}
-        onDelete={handleDelete}
-        columns={[
-          { key: "name", label: "Name", render: (item) => <span className="font-medium">{item.name}</span> },
-          { key: "title", label: "Title" },
-          { key: "department", label: "Department" },
-          { key: "specialization", label: "Specialization", render: (item) => <span className="text-muted-foreground">{item.specialization}</span> },
-          { key: "email", label: "Email", render: (item) => <span className="text-primary">{item.email}</span> },
-        ]}
-      />
+      {loading ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            <p className="text-muted-foreground">Loading faculty members...</p>
+          </div>
+        </div>
+      ) : (
+        <DataTable
+          title="Faculty Members"
+          data={data}
+          searchKey="name"
+          onAdd={openCreate}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          columns={[
+            { key: "name", label: "Name", render: (item) => <span className="font-medium">{item.name}</span> },
+            { key: "title", label: "Title" },
+            { key: "department", label: "Department" },
+            { key: "specialization", label: "Specialization", render: (item) => <span className="text-muted-foreground">{item.specialization}</span> },
+            { key: "email", label: "Email", render: (item) => <span className="text-primary">{item.email}</span> },
+          ]}
+        />
+      )}
       <FormDialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        onClose={() => !submitting && setDialogOpen(false)}
         title={editing ? "Edit Faculty" : "Add Faculty"}
         fields={fields}
         values={form}
         onChange={(k, v) => setForm((f) => ({ ...f, [k]: v }))}
         onSubmit={handleSubmit}
+        submitLabel={submitting ? "Saving..." : "Save"}
+        disabled={submitting}
       />
     </>
   );
