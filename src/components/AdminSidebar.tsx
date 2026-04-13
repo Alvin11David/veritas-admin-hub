@@ -13,6 +13,7 @@ import {
   MessageSquare,
   FileText,
   Mail,
+  Bell,
   Settings,
   GraduationCap,
 } from "lucide-react";
@@ -50,6 +51,7 @@ const contentItems = [
 
 const systemItems = [
   { title: "Submissions", url: "/submissions", icon: Mail },
+  { title: "Notifications", url: "/notifications", icon: Bell },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
