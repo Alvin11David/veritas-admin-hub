@@ -40,14 +40,49 @@ interface FacultyForm {
 }
 
 const fields: FormField[] = [
-  { key: "name", label: "Full Name", type: "text", placeholder: "Dr. Jane Doe" },
+  {
+    key: "name",
+    label: "Full Name",
+    type: "text",
+    placeholder: "Dr. Jane Doe",
+  },
   { key: "title", label: "Title", type: "text", placeholder: "Professor" },
-  { key: "department", label: "Department", type: "text", placeholder: "Computer Science" },
-  { key: "email", label: "Email", type: "email", placeholder: "name@veritas.edu" },
-  { key: "specialization", label: "Specialization", type: "text", placeholder: "Area of expertise" },
-  { key: "bio", label: "Biography", type: "textarea", placeholder: "Brief bio..." },
-  { key: "photoUrl", label: "Photo URL", type: "text", placeholder: "https://..." },
-  { key: "displayOrder", label: "Display Order", type: "number", placeholder: "1" },
+  {
+    key: "department",
+    label: "Department",
+    type: "text",
+    placeholder: "Computer Science",
+  },
+  {
+    key: "email",
+    label: "Email",
+    type: "email",
+    placeholder: "name@veritas.edu",
+  },
+  {
+    key: "specialization",
+    label: "Specialization",
+    type: "text",
+    placeholder: "Area of expertise",
+  },
+  {
+    key: "bio",
+    label: "Biography",
+    type: "textarea",
+    placeholder: "Brief bio...",
+  },
+  {
+    key: "photoUrl",
+    label: "Photo URL",
+    type: "text",
+    placeholder: "https://...",
+  },
+  {
+    key: "displayOrder",
+    label: "Display Order",
+    type: "number",
+    placeholder: "1",
+  },
 ];
 
 const defaultForm: FacultyForm = {
@@ -191,11 +226,31 @@ export default function FacultyPage() {
           onEdit={openEdit}
           onDelete={handleDelete}
           columns={[
-            { key: "name", label: "Name", render: (item) => <span className="font-medium">{item.name}</span> },
+            {
+              key: "name",
+              label: "Name",
+              render: (item) => (
+                <span className="font-medium">{item.name}</span>
+              ),
+            },
             { key: "title", label: "Title" },
             { key: "department", label: "Department" },
-            { key: "specialization", label: "Specialization", render: (item) => <span className="text-muted-foreground">{item.specialization}</span> },
-            { key: "email", label: "Email", render: (item) => <span className="text-primary">{item.email}</span> },
+            {
+              key: "specialization",
+              label: "Specialization",
+              render: (item) => (
+                <span className="text-muted-foreground">
+                  {item.specialization}
+                </span>
+              ),
+            },
+            {
+              key: "email",
+              label: "Email",
+              render: (item) => (
+                <span className="text-primary">{item.email}</span>
+              ),
+            },
           ]}
         />
       )}
