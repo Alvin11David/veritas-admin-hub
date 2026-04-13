@@ -27,7 +27,11 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 
 if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-  connectFirestoreEmulator(db, "localhost", 8080);
+  try {
+    connectFirestoreEmulator(db, "localhost", 8080);
+  } catch {
+    // Ignore emulator re-connection errors during hot reload.
+  }
 }
 
 export default app;
