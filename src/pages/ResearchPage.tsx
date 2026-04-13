@@ -190,7 +190,10 @@ export default function ResearchPage() {
             module: "research",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Research item updated");
       } else {
@@ -206,7 +209,10 @@ export default function ResearchPage() {
             module: "research",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Research item created");
       }
@@ -232,7 +238,10 @@ export default function ResearchPage() {
           module: "research",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Research item deleted");
       await fetchResearch();
@@ -263,12 +272,16 @@ export default function ResearchPage() {
             {
               key: "title",
               label: "Title",
-              render: (item) => <span className="font-medium">{item.title}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.title}</span>
+              ),
             },
             {
               key: "category",
               label: "Category",
-              render: (item) => <span className="text-muted-foreground">{item.category}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.category}</span>
+              ),
             },
             {
               key: "link",
@@ -290,7 +303,9 @@ export default function ResearchPage() {
               render: (item) => (
                 <Badge
                   variant={item.featured ? "default" : "secondary"}
-                  className={item.featured ? "bg-success/20 text-success border-0" : ""}
+                  className={
+                    item.featured ? "bg-success/20 text-success border-0" : ""
+                  }
                 >
                   {item.featured ? "Yes" : "No"}
                 </Badge>
