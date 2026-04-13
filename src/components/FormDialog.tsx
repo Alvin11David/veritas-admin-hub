@@ -15,6 +15,7 @@ export interface FormField {
   label: string;
   type: "text" | "textarea" | "toggle" | "date" | "email" | "number";
   placeholder?: string;
+  options?: string[];
 }
 
 interface FormDialogProps {
@@ -72,21 +73,31 @@ export function FormDialog({
                   </span>
                 </div>
               ) : (
-                <Input
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  value={values[field.key] ?? ""}
-                  onChange={(e) =>
-                    onChange(
-                      field.key,
-                      field.type === "number"
-                        ? Number(e.target.value)
-                        : e.target.value,
-                    )
-                  }
-                  className="bg-secondary border-border"
-                  disabled={disabled}
-                />
+                <>
+                  <Input
+                    type={field.type}
+                    list={field.options?.length ? `${field.key}-options` : undefined}
+                    placeholder={field.placeholder}
+                    value={values[field.key] ?? ""}
+                    onChange={(e) =>
+                      onChange(
+                        field.key,
+                        field.type === "number"
+                          ? Number(e.target.value)
+                          : e.target.value,
+                      )
+                    }
+                    className="bg-secondary border-border"
+                    disabled={disabled}
+                  />
+                  {field.options?.length ? (
+                    <datalist id={`${field.key}-options`}>
+                      {field.options.map((option) => (
+                        <option key={option} value={option} />
+                      ))}
+                    </datalist>
+                  ) : null}
+                </>
               )}
             </div>
           ))}
