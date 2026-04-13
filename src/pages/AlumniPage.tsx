@@ -223,7 +223,10 @@ export default function AlumniPage() {
             module: "alumni",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Alumni profile updated");
       } else {
@@ -239,7 +242,10 @@ export default function AlumniPage() {
             module: "alumni",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Alumni profile created");
       }
@@ -265,7 +271,10 @@ export default function AlumniPage() {
           module: "alumni",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Alumni profile deleted");
       await fetchAlumni();
@@ -296,7 +305,9 @@ export default function AlumniPage() {
             {
               key: "name",
               label: "Name",
-              render: (item) => <span className="font-medium">{item.name}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.name}</span>
+              ),
             },
             {
               key: "graduationYear",
@@ -306,7 +317,9 @@ export default function AlumniPage() {
             {
               key: "program",
               label: "Program",
-              render: (item) => <span className="text-muted-foreground">{item.program}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.program}</span>
+              ),
             },
             {
               key: "currentRole",
@@ -316,7 +329,9 @@ export default function AlumniPage() {
             {
               key: "company",
               label: "Company",
-              render: (item) => <span className="text-muted-foreground">{item.company}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.company}</span>
+              ),
             },
             {
               key: "featured",
@@ -324,7 +339,9 @@ export default function AlumniPage() {
               render: (item) => (
                 <Badge
                   variant={item.featured ? "default" : "secondary"}
-                  className={item.featured ? "bg-success/20 text-success border-0" : ""}
+                  className={
+                    item.featured ? "bg-success/20 text-success border-0" : ""
+                  }
                 >
                   {item.featured ? "Yes" : "No"}
                 </Badge>
