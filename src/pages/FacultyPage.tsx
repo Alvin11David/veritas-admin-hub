@@ -68,6 +68,18 @@ const fields: FormField[] = [
     label: "Department",
     type: "text",
     placeholder: "Computer Science",
+    options: [
+      "Computer Science",
+      "Information Technology",
+      "Software Engineering",
+      "Mathematics",
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "Economics",
+      "Business Administration",
+      "Education",
+    ],
   },
   {
     key: "email",
