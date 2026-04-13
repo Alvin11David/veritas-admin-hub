@@ -18,7 +18,8 @@ interface NotificationItem {
     | "gallery"
     | "faqs"
     | "quick-links"
-    | "research";
+    | "research"
+    | "alumni";
   timestamp?: string;
   createdAt?: string;
 }

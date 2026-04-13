@@ -14,7 +14,8 @@ export interface NotificationPayload {
     | "gallery"
     | "faqs"
     | "quick-links"
-    | "research";
+    | "research"
+    | "alumni";
   user?: string;
 }
 
