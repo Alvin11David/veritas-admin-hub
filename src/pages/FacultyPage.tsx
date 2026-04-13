@@ -4,6 +4,7 @@ import { FormDialog, FormField } from "@/components/FormDialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { db } from "@/config/firebase";
+import { createAdminNotification } from "@/lib/notifications";
 import {
   addDoc,
   collection,
@@ -184,6 +185,17 @@ export default function FacultyPage() {
       console.error("Error queueing email notification:", mailError);
     }
 
+    try {
+      await createAdminNotification({
+        action: "Created",
+        target: `${payload.name} profile`,
+        type: "create",
+        module: "faculty",
+      });
+    } catch (notificationError) {
+      console.error("Error creating activity notification:", notificationError);
+    }
+
     return { createdId: createdRef.id, emailQueued };
   };
 
@@ -257,6 +269,16 @@ export default function FacultyPage() {
 
       if (editing) {
         await updateDoc(doc(db, "faculty", editing.id), payload);
+        try {
+          await createAdminNotification({
+            action: "Updated",
+            target: `${payload.name} profile`,
+            type: "update",
+            module: "faculty",
+          });
+        } catch (notificationError) {
+          console.error("Error creating activity notification:", notificationError);
+        }
         toast.success("Faculty member updated");
       } else {
         const { emailQueued } =
@@ -284,6 +306,16 @@ export default function FacultyPage() {
   const handleDelete = async (item: FacultyMember) => {
     try {
       await deleteDoc(doc(db, "faculty", item.id));
+      try {
+        await createAdminNotification({
+          action: "Deleted",
+          target: `${item.name} profile`,
+          type: "delete",
+          module: "faculty",
+        });
+      } catch (notificationError) {
+        console.error("Error creating activity notification:", notificationError);
+      }
       toast.success("Faculty member removed");
       await fetchFaculty();
     } catch (error) {
