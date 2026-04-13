@@ -150,7 +150,10 @@ export default function GalleryPage() {
             module: "gallery",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Gallery item updated");
       } else {
@@ -166,7 +169,10 @@ export default function GalleryPage() {
             module: "gallery",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Gallery item created");
       }
@@ -192,7 +198,10 @@ export default function GalleryPage() {
           module: "gallery",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Gallery item deleted");
       await fetchGallery();
@@ -223,13 +232,17 @@ export default function GalleryPage() {
             {
               key: "title",
               label: "Title",
-              render: (item) => <span className="font-medium">{item.title}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.title}</span>
+              ),
             },
             {
               key: "mediaType",
               label: "Type",
               render: (item) => (
-                <span className="capitalize text-muted-foreground">{item.mediaType}</span>
+                <span className="capitalize text-muted-foreground">
+                  {item.mediaType}
+                </span>
               ),
             },
             {
@@ -250,7 +263,9 @@ export default function GalleryPage() {
               key: "description",
               label: "Description",
               render: (item) => (
-                <span className="text-muted-foreground line-clamp-1">{item.description}</span>
+                <span className="text-muted-foreground line-clamp-1">
+                  {item.description}
+                </span>
               ),
             },
           ]}
