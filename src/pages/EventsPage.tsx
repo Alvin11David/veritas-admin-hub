@@ -36,12 +36,32 @@ interface EventForm {
 }
 
 const fields: FormField[] = [
-  { key: "title", label: "Event Title", type: "text", placeholder: "Event name" },
+  {
+    key: "title",
+    label: "Event Title",
+    type: "text",
+    placeholder: "Event name",
+  },
   { key: "date", label: "Date", type: "date" },
   { key: "time", label: "Time", type: "text", placeholder: "10:00 AM" },
-  { key: "location", label: "Location", type: "text", placeholder: "Main Auditorium" },
-  { key: "description", label: "Description", type: "textarea", placeholder: "Event details..." },
-  { key: "featuredImage", label: "Featured Image URL", type: "text", placeholder: "https://..." },
+  {
+    key: "location",
+    label: "Location",
+    type: "text",
+    placeholder: "Main Auditorium",
+  },
+  {
+    key: "description",
+    label: "Description",
+    type: "textarea",
+    placeholder: "Event details...",
+  },
+  {
+    key: "featuredImage",
+    label: "Featured Image URL",
+    type: "text",
+    placeholder: "https://...",
+  },
 ];
 
 const defaultForm: EventForm = {
@@ -179,10 +199,22 @@ export default function EventsPage() {
           onEdit={openEdit}
           onDelete={handleDelete}
           columns={[
-            { key: "title", label: "Title", render: (item) => <span className="font-medium">{item.title}</span> },
+            {
+              key: "title",
+              label: "Title",
+              render: (item) => (
+                <span className="font-medium">{item.title}</span>
+              ),
+            },
             { key: "date", label: "Date" },
             { key: "time", label: "Time" },
-            { key: "location", label: "Location", render: (item) => <span className="text-muted-foreground">{item.location}</span> },
+            {
+              key: "location",
+              label: "Location",
+              render: (item) => (
+                <span className="text-muted-foreground">{item.location}</span>
+              ),
+            },
           ]}
         />
       )}
