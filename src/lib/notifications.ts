@@ -7,7 +7,7 @@ export interface NotificationPayload {
   action: string;
   target: string;
   type: NotificationType;
-  module: "faculty" | "events" | "programs";
+  module: "faculty" | "events" | "programs" | "gallery";
   user?: string;
 }
 

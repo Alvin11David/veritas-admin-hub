@@ -11,7 +11,7 @@ interface NotificationItem {
   target: string;
   user: string;
   type: "create" | "update" | "delete";
-  module: "faculty" | "events" | "programs";
+  module: "faculty" | "events" | "programs" | "gallery";
   timestamp?: string;
   createdAt?: string;
 }
