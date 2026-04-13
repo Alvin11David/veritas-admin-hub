@@ -7,7 +7,13 @@ export interface NotificationPayload {
   action: string;
   target: string;
   type: NotificationType;
-  module: "faculty" | "events" | "programs" | "gallery" | "faqs";
+  module:
+    | "faculty"
+    | "events"
+    | "programs"
+    | "gallery"
+    | "faqs"
+    | "quick-links";
   user?: string;
 }
 
