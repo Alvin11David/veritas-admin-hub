@@ -241,7 +241,9 @@ export default function FacultyPage() {
           });
         } catch (mailError) {
           console.error("Error queueing email notification:", mailError);
-          toast.warning("Faculty was added, but notification email could not be queued");
+          toast.warning(
+            "Faculty was added, but notification email could not be queued",
+          );
         }
 
         toast.success("Faculty member added");
