@@ -259,9 +259,8 @@ export default function FacultyPage() {
         await updateDoc(doc(db, "faculty", editing.id), payload);
         toast.success("Faculty member updated");
       } else {
-        const { emailQueued } = await createFacultyMemberWithNotification(
-          payload,
-        );
+        const { emailQueued } =
+          await createFacultyMemberWithNotification(payload);
 
         if (!emailQueued) {
           toast.warning(
