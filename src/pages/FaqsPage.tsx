@@ -169,7 +169,10 @@ export default function FaqsPage() {
             module: "faqs",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("FAQ updated");
       } else {
@@ -185,7 +188,10 @@ export default function FaqsPage() {
             module: "faqs",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("FAQ created");
       }
@@ -211,7 +217,10 @@ export default function FaqsPage() {
           module: "faqs",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("FAQ deleted");
       await fetchFaqs();
@@ -242,12 +251,16 @@ export default function FaqsPage() {
             {
               key: "question",
               label: "Question",
-              render: (item) => <span className="font-medium">{item.question}</span>,
+              render: (item) => (
+                <span className="font-medium">{item.question}</span>
+              ),
             },
             {
               key: "category",
               label: "Category",
-              render: (item) => <span className="text-muted-foreground">{item.category}</span>,
+              render: (item) => (
+                <span className="text-muted-foreground">{item.category}</span>
+              ),
             },
             {
               key: "displayOrder",
@@ -260,7 +273,9 @@ export default function FaqsPage() {
               render: (item) => (
                 <Badge
                   variant={item.active ? "default" : "secondary"}
-                  className={item.active ? "bg-success/20 text-success border-0" : ""}
+                  className={
+                    item.active ? "bg-success/20 text-success border-0" : ""
+                  }
                 >
                   {item.active ? "Active" : "Inactive"}
                 </Badge>
