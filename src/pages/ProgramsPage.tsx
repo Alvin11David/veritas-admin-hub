@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { db } from "@/config/firebase";
+import { createAdminNotification } from "@/lib/notifications";
 import {
   collection,
   query,
@@ -117,6 +118,7 @@ export default function ProgramsPage() {
       if (editing) {
         // Update existing program
         const docRef = doc(db, "AcademicPrograms", editing.id);
+        const updatedName = form.programName;
         await updateDoc(docRef, {
           programName: form.programName,
           programCode: form.programCode.toUpperCase(),
@@ -128,9 +130,20 @@ export default function ProgramsPage() {
           status: form.status || "active",
           updatedAt: new Date().toISOString().split("T")[0],
         });
+        try {
+          await createAdminNotification({
+            action: "Updated",
+            target: updatedName,
+            type: "update",
+            module: "programs",
+          });
+        } catch (notificationError) {
+          console.error("Error creating activity notification:", notificationError);
+        }
         toast.success("Program updated");
       } else {
         // Create new program
+        const createdName = form.programName;
         await addDoc(collection(db, "AcademicPrograms"), {
           programName: form.programName,
           programCode: form.programCode.toUpperCase(),
@@ -143,6 +156,16 @@ export default function ProgramsPage() {
           createdAt: new Date().toISOString().split("T")[0],
           updatedAt: new Date().toISOString().split("T")[0],
         });
+        try {
+          await createAdminNotification({
+            action: "Created",
+            target: createdName,
+            type: "create",
+            module: "programs",
+          });
+        } catch (notificationError) {
+          console.error("Error creating activity notification:", notificationError);
+        }
         toast.success("Program created");
       }
 
@@ -160,6 +183,16 @@ export default function ProgramsPage() {
     try {
       const docRef = doc(db, "AcademicPrograms", item.id);
       await deleteDoc(docRef);
+      try {
+        await createAdminNotification({
+          action: "Deleted",
+          target: item.programName,
+          type: "delete",
+          module: "programs",
+        });
+      } catch (notificationError) {
+        console.error("Error creating activity notification:", notificationError);
+      }
       toast.success("Program deleted");
       await fetchPrograms();
     } catch (error) {
