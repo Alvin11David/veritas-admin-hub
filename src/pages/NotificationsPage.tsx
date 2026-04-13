@@ -17,7 +17,8 @@ interface NotificationItem {
     | "programs"
     | "gallery"
     | "faqs"
-    | "quick-links";
+    | "quick-links"
+    | "research";
   timestamp?: string;
   createdAt?: string;
 }

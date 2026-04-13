@@ -13,7 +13,8 @@ export interface NotificationPayload {
     | "programs"
     | "gallery"
     | "faqs"
-    | "quick-links";
+    | "quick-links"
+    | "research";
   user?: string;
 }
 
