@@ -160,7 +160,10 @@ export default function EventsPage() {
             module: "events",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Event updated");
       } else {
@@ -176,7 +179,10 @@ export default function EventsPage() {
             module: "events",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Event created");
       }
@@ -202,7 +208,10 @@ export default function EventsPage() {
           module: "events",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Event deleted");
       await fetchEvents();

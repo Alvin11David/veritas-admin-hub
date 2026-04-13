@@ -138,7 +138,10 @@ export default function ProgramsPage() {
             module: "programs",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Program updated");
       } else {
@@ -164,7 +167,10 @@ export default function ProgramsPage() {
             module: "programs",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Program created");
       }
@@ -191,7 +197,10 @@ export default function ProgramsPage() {
           module: "programs",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Program deleted");
       await fetchPrograms();

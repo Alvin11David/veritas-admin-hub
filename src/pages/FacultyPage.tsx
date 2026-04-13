@@ -277,7 +277,10 @@ export default function FacultyPage() {
             module: "faculty",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Faculty member updated");
       } else {
@@ -314,7 +317,10 @@ export default function FacultyPage() {
           module: "faculty",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Faculty member removed");
       await fetchFaculty();

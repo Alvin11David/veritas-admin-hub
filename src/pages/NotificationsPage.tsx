@@ -116,12 +116,16 @@ export default function NotificationsPage() {
                 className="rounded-lg border border-border bg-card p-4"
               >
                 <div className="flex items-start gap-3">
-                  <div className={`p-1.5 rounded-md bg-secondary ${config.color}`}>
+                  <div
+                    className={`p-1.5 rounded-md bg-secondary ${config.color}`}
+                  >
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-foreground">
-                      <span className="text-muted-foreground">{item.user || "Admin"}</span>{" "}
+                      <span className="text-muted-foreground">
+                        {item.user || "Admin"}
+                      </span>{" "}
                       {item.action.toLowerCase()}{" "}
                       <span className="font-medium">{item.target}</span>
                     </p>
