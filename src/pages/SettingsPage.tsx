@@ -327,6 +327,120 @@ export default function SettingsPage() {
         <Card className="border-border/80 shadow-sm">
           <CardHeader className="space-y-1">
             <CardTitle className="flex items-center gap-2 text-lg">
+              <Globe className="h-4 w-4 text-primary" /> Organization Info
+            </CardTitle>
+            <CardDescription>
+              Configure student portal name, mission, and contact information displayed across the platform.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="student-portal-name">Student Application Portal Name</Label>
+              <Input
+                id="student-portal-name"
+                value={studentPortalName}
+                onChange={(event) => {
+                  setStudentPortalName(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="e.g., Student Application Portal"
+                maxLength={120}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organization-mission">Organization Mission</Label>
+              <Input
+                id="organization-mission"
+                value={organizationMission}
+                onChange={(event) => {
+                  setOrganizationMission(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="Empowering single mothers and vulnerable youth..."
+                maxLength={300}
+              />
+              <p className="text-xs text-muted-foreground">
+                A brief mission statement or tagline.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="organization-email">Email Address</Label>
+                <Input
+                  id="organization-email"
+                  type="email"
+                  value={organizationEmail}
+                  onChange={(event) => {
+                    setOrganizationEmail(event.target.value);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                  placeholder="info@example.org"
+                  maxLength={100}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="organization-phone">Phone Number</Label>
+                <Input
+                  id="organization-phone"
+                  value={organizationPhone}
+                  onChange={(event) => {
+                    setOrganizationPhone(event.target.value);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                  placeholder="+256 700 000 000"
+                  maxLength={50}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organization-whatsapp">WhatsApp Call-to-Action</Label>
+              <Input
+                id="organization-whatsapp"
+                value={organizationWhatsappCta}
+                onChange={(event) => {
+                  setOrganizationWhatsappCta(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="WhatsApp Us"
+                maxLength={100}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organization-address">Physical Address</Label>
+              <Input
+                id="organization-address"
+                value={organizationAddress}
+                onChange={(event) => {
+                  setOrganizationAddress(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="Plot 7, Nakawa Road, Kampala, Uganda"
+                maxLength={200}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/80 shadow-sm">
+          <CardHeader className="space-y-1">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Wrench className="h-4 w-4 text-primary" /> Interface Controls
             </CardTitle>
             <CardDescription>
