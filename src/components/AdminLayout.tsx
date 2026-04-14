@@ -1,11 +1,19 @@
+import { useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
 import { Outlet } from "react-router-dom";
 import { Bell, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
+import { useAppSettings } from "@/lib/app-settings";
 
 export function AdminLayout() {
+  const { settings } = useAppSettings();
+
+  useEffect(() => {
+    document.title = settings.softwareName;
+  }, [settings.softwareName]);
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
