@@ -44,6 +44,12 @@ export const APP_SETTINGS_DEFAULTS: AppSettings = {
   dateFormat: "MM/DD/YYYY",
   timeFormat: "12h",
   maintenanceMode: false,
+  studentPortalName: "",
+  organizationMission: "",
+  organizationEmail: "",
+  organizationPhone: "",
+  organizationWhatsappCta: "",
+  organizationAddress: "",
 };
 
 function normalizeText(value: string, fallback: string) {
@@ -168,6 +174,12 @@ export function saveAppSettings(next: Partial<AppSettings>) {
     dateFormat: normalizeDateFormat(merged.dateFormat),
     timeFormat: normalizeTimeFormat(merged.timeFormat),
     maintenanceMode: Boolean(merged.maintenanceMode),
+    studentPortalName: normalizeText(merged.studentPortalName, ""),
+    organizationMission: normalizeText(merged.organizationMission, ""),
+    organizationEmail: normalizeText(merged.organizationEmail, ""),
+    organizationPhone: normalizeText(merged.organizationPhone, ""),
+    organizationWhatsappCta: normalizeText(merged.organizationWhatsappCta, ""),
+    organizationAddress: normalizeText(merged.organizationAddress, ""),
   };
 
   if (canUseWindow()) {
