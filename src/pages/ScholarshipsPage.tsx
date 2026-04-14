@@ -1,14 +1,34 @@
 import { useEffect, useState } from "react";
-import { Calendar, ExternalLink, GraduationCap, ShieldAlert, Loader2 } from "lucide-react";
+import {
+  Calendar,
+  ExternalLink,
+  GraduationCap,
+  ShieldAlert,
+  Loader2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { DataTable } from "@/components/DataTable";
 import { FormDialog, type FormField } from "@/components/FormDialog";
 import { db } from "@/config/firebase";
 import { createAdminNotification } from "@/lib/notifications";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 
 type ScholarshipStatus = "Open" | "Closing Soon" | "Closed";
 
@@ -36,11 +56,31 @@ interface ScholarshipForm {
 }
 
 const fields: FormField[] = [
-  { key: "title", label: "Scholarship Title", type: "text", placeholder: "Merit Excellence Scholarship" },
-  { key: "amount", label: "Award Amount", type: "text", placeholder: "Up to $5,000" },
+  {
+    key: "title",
+    label: "Scholarship Title",
+    type: "text",
+    placeholder: "Merit Excellence Scholarship",
+  },
+  {
+    key: "amount",
+    label: "Award Amount",
+    type: "text",
+    placeholder: "Up to $5,000",
+  },
   { key: "deadline", label: "Application Deadline", type: "date" },
-  { key: "url", label: "Application Link", type: "text", placeholder: "https://..." },
-  { key: "description", label: "Description", type: "textarea", placeholder: "Describe the scholarship eligibility and purpose." },
+  {
+    key: "url",
+    label: "Application Link",
+    type: "text",
+    placeholder: "https://...",
+  },
+  {
+    key: "description",
+    label: "Description",
+    type: "textarea",
+    placeholder: "Describe the scholarship eligibility and purpose.",
+  },
   { key: "openInNewTab", label: "Open In New Tab", type: "toggle" },
   { key: "active", label: "Active", type: "toggle" },
 ];
@@ -114,7 +154,9 @@ export default function ScholarshipsPage() {
       });
 
       scholarships.sort((a, b) => {
-        const order = deadlineDate(a.deadline).getTime() - deadlineDate(b.deadline).getTime();
+        const order =
+          deadlineDate(a.deadline).getTime() -
+          deadlineDate(b.deadline).getTime();
         if (order !== 0) return order;
         return a.title.localeCompare(b.title);
       });
@@ -149,7 +191,13 @@ export default function ScholarshipsPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.description || !form.amount || !form.deadline || !form.url) {
+    if (
+      !form.title ||
+      !form.description ||
+      !form.amount ||
+      !form.deadline ||
+      !form.url
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -177,7 +225,10 @@ export default function ScholarshipsPage() {
             module: "scholarships",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Scholarship updated");
       } else {
@@ -193,7 +244,10 @@ export default function ScholarshipsPage() {
             module: "scholarships",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Scholarship created");
       }
@@ -219,7 +273,10 @@ export default function ScholarshipsPage() {
           module: "scholarships",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Scholarship deleted");
       await fetchScholarships();
@@ -231,7 +288,8 @@ export default function ScholarshipsPage() {
 
   const openItems = data.filter((item) => getStatus(item) !== "Closed");
   const nextDeadline = [...openItems].sort(
-    (a, b) => deadlineDate(a.deadline).getTime() - deadlineDate(b.deadline).getTime(),
+    (a, b) =>
+      deadlineDate(a.deadline).getTime() - deadlineDate(b.deadline).getTime(),
   )[0];
 
   return (
@@ -256,17 +314,24 @@ export default function ScholarshipsPage() {
                     Scholarships
                   </h1>
                   <p className="max-w-2xl text-sm text-muted-foreground">
-                    Admins can create, update, and remove scholarship links with deadlines, visibility, and application behavior.
+                    Admins can create, update, and remove scholarship links with
+                    deadlines, visibility, and application behavior.
                   </p>
                 </div>
 
                 <div className="rounded-lg border border-primary/20 bg-background/80 px-4 py-3 backdrop-blur-sm">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Next deadline</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Next deadline
+                  </p>
                   <p className="mt-1 text-sm font-semibold text-foreground">
-                    {nextDeadline ? nextDeadline.title : "No active scholarships"}
+                    {nextDeadline
+                      ? nextDeadline.title
+                      : "No active scholarships"}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {nextDeadline ? formatDeadline(nextDeadline.deadline) : "Add a scholarship to get started"}
+                    {nextDeadline
+                      ? formatDeadline(nextDeadline.deadline)
+                      : "Add a scholarship to get started"}
                   </p>
                 </div>
               </div>
@@ -277,7 +342,8 @@ export default function ScholarshipsPage() {
             <Card className="border-border/80 shadow-sm lg:col-span-2">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <GraduationCap className="h-4 w-4 text-primary" /> Scholarship Records
+                  <GraduationCap className="h-4 w-4 text-primary" /> Scholarship
+                  Records
                 </CardTitle>
                 <CardDescription>
                   Manage scholarship links directly from the admin panel.
@@ -295,12 +361,18 @@ export default function ScholarshipsPage() {
                     {
                       key: "title",
                       label: "Title",
-                      render: (item) => <span className="font-medium">{item.title}</span>,
+                      render: (item) => (
+                        <span className="font-medium">{item.title}</span>
+                      ),
                     },
                     {
                       key: "amount",
                       label: "Amount",
-                      render: (item) => <span className="text-muted-foreground">{item.amount}</span>,
+                      render: (item) => (
+                        <span className="text-muted-foreground">
+                          {item.amount}
+                        </span>
+                      ),
                     },
                     {
                       key: "deadline",
@@ -319,7 +391,13 @@ export default function ScholarshipsPage() {
                         const status = getStatus(item);
                         return (
                           <Badge
-                            variant={status === "Closed" ? "secondary" : status === "Closing Soon" ? "destructive" : "default"}
+                            variant={
+                              status === "Closed"
+                                ? "secondary"
+                                : status === "Closing Soon"
+                                  ? "destructive"
+                                  : "default"
+                            }
                             className={
                               status === "Closing Soon"
                                 ? "bg-amber-500/15 text-amber-700 border-amber-200"
@@ -356,15 +434,19 @@ export default function ScholarshipsPage() {
                   <ShieldAlert className="h-4 w-4 text-primary" /> Admin Notes
                 </CardTitle>
                 <CardDescription>
-                  Deadline-aware display keeps expired scholarships from being promoted.
+                  Deadline-aware display keeps expired scholarships from being
+                  promoted.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <p>
-                  Use Add, Edit, and Delete to manage scholarships directly. Status updates automatically based on active state and deadline.
+                  Use Add, Edit, and Delete to manage scholarships directly.
+                  Status updates automatically based on active state and
+                  deadline.
                 </p>
                 <p>
-                  Scholarship links marked inactive or past their deadline will show as closed in the table.
+                  Scholarship links marked inactive or past their deadline will
+                  show as closed in the table.
                 </p>
               </CardContent>
             </Card>
@@ -372,7 +454,10 @@ export default function ScholarshipsPage() {
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <ExternalLink className="h-3.5 w-3.5" />
-            <span>{openItems.length} active scholarship{openItems.length === 1 ? "" : "s"}</span>
+            <span>
+              {openItems.length} active scholarship
+              {openItems.length === 1 ? "" : "s"}
+            </span>
           </div>
         </div>
       )}
@@ -383,7 +468,9 @@ export default function ScholarshipsPage() {
         title={editing ? "Edit Scholarship" : "New Scholarship"}
         fields={fields}
         values={form}
-        onChange={(k, v) => setForm((current) => ({ ...current, [k]: v as never }))}
+        onChange={(k, v) =>
+          setForm((current) => ({ ...current, [k]: v as never }))
+        }
         onSubmit={handleSubmit}
         submitLabel={submitting ? "Saving..." : "Save"}
         disabled={submitting}
@@ -391,7 +478,12 @@ export default function ScholarshipsPage() {
     </>
   );
 }
-import { Calendar, ExternalLink, GraduationCap, ShieldAlert } from "lucide-react";
+import {
+  Calendar,
+  ExternalLink,
+  GraduationCap,
+  ShieldAlert,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -450,11 +542,15 @@ function formatDeadline(deadline: string) {
 }
 
 function isPastDeadline(deadline: string) {
-  return new Date(deadline).getTime() < new Date("2026-04-14T00:00:00").getTime();
+  return (
+    new Date(deadline).getTime() < new Date("2026-04-14T00:00:00").getTime()
+  );
 }
 
 export default function ScholarshipsPage() {
-  const openScholarships = scholarships.filter((item) => !isPastDeadline(item.deadline));
+  const openScholarships = scholarships.filter(
+    (item) => !isPastDeadline(item.deadline),
+  );
   const nextDeadline = openScholarships.sort(
     (a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime(),
   )[0];
@@ -472,13 +568,16 @@ export default function ScholarshipsPage() {
                 Scholarship Opportunities
               </h1>
               <p className="max-w-2xl text-sm text-muted-foreground">
-                Share active scholarship links with clear deadlines so applicants know exactly when to apply.
+                Share active scholarship links with clear deadlines so
+                applicants know exactly when to apply.
               </p>
             </div>
 
             {nextDeadline ? (
               <div className="rounded-lg border border-primary/20 bg-background/80 px-4 py-3 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">Next deadline</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Next deadline
+                </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {nextDeadline.title}
                 </p>
@@ -495,10 +594,12 @@ export default function ScholarshipsPage() {
         <Card className="border-border/80 shadow-sm lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <GraduationCap className="h-4 w-4 text-primary" /> Active Scholarship Links
+              <GraduationCap className="h-4 w-4 text-primary" /> Active
+              Scholarship Links
             </CardTitle>
             <CardDescription>
-              Each link includes its deadline so students can apply before the window closes.
+              Each link includes its deadline so students can apply before the
+              window closes.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -548,7 +649,11 @@ export default function ScholarshipsPage() {
                     </div>
 
                     <div className="flex flex-col gap-2 md:min-w-40 md:items-end">
-                      <Button asChild disabled={expired} className="w-full md:w-auto">
+                      <Button
+                        asChild
+                        disabled={expired}
+                        className="w-full md:w-auto"
+                      >
                         <a
                           href={expired ? undefined : scholarship.url}
                           target="_blank"
@@ -589,10 +694,12 @@ export default function ScholarshipsPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>
-              The top application link now includes a deadline badge, and expired links are disabled automatically.
+              The top application link now includes a deadline badge, and
+              expired links are disabled automatically.
             </p>
             <p>
-              You can update the URL and deadline values in this page whenever a scholarship cycle changes.
+              You can update the URL and deadline values in this page whenever a
+              scholarship cycle changes.
             </p>
           </CardContent>
         </Card>
