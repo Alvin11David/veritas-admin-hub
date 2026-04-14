@@ -16,6 +16,7 @@ export const DEFAULT_SOFTWARE_NAME = "Application Management";
 export const DEFAULT_SOFTWARE_TAGLINE = "Admin Panel";
 export const DEFAULT_DASHBOARD_WELCOME = "Welcome back, Admin";
 export const DEFAULT_TIMEZONE = "UTC";
+export const DEFAULT_CURRENT_YEAR = String(new Date().getFullYear());
 
 export const DATE_FORMAT_OPTIONS = [
   "MM/DD/YYYY",
@@ -31,6 +32,7 @@ export interface AppSettings {
   softwareName: string;
   softwareTagline: string;
   dashboardWelcome: string;
+  currentYear: string;
   showNotificationDot: boolean;
   timezone: string;
   dateFormat: DateFormat;
@@ -48,6 +50,7 @@ export const APP_SETTINGS_DEFAULTS: AppSettings = {
   softwareName: DEFAULT_SOFTWARE_NAME,
   softwareTagline: DEFAULT_SOFTWARE_TAGLINE,
   dashboardWelcome: DEFAULT_DASHBOARD_WELCOME,
+  currentYear: DEFAULT_CURRENT_YEAR,
   showNotificationDot: true,
   timezone: DEFAULT_TIMEZONE,
   dateFormat: "MM/DD/YYYY",
@@ -92,6 +95,11 @@ function normalizeTimezone(value: string | undefined): string {
   }
 }
 
+function normalizeCurrentYear(value: string | undefined): string {
+  const candidate = (value ?? "").trim();
+  return /^\d{4}$/.test(candidate) ? candidate : DEFAULT_CURRENT_YEAR;
+}
+
 function normalizeFirestoreData(
   data: Partial<AppSettings> | undefined,
 ): AppSettings {
@@ -112,6 +120,7 @@ function normalizeFirestoreData(
       data.dashboardWelcome ?? APP_SETTINGS_DEFAULTS.dashboardWelcome,
       DEFAULT_DASHBOARD_WELCOME,
     ),
+    currentYear: normalizeCurrentYear(data.currentYear),
     showNotificationDot:
       typeof data.showNotificationDot === "boolean"
         ? data.showNotificationDot
@@ -186,6 +195,7 @@ export async function saveAppSettingsToFirestore(
       merged.dashboardWelcome,
       DEFAULT_DASHBOARD_WELCOME,
     ),
+    currentYear: normalizeCurrentYear(merged.currentYear),
     showNotificationDot: Boolean(merged.showNotificationDot),
     timezone: normalizeTimezone(merged.timezone),
     dateFormat: normalizeDateFormat(merged.dateFormat),
