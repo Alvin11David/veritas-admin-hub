@@ -102,6 +102,12 @@ export default function SettingsPage() {
       dateFormat,
       timeFormat,
       maintenanceMode,
+      studentPortalName,
+      organizationMission,
+      organizationEmail,
+      organizationPhone,
+      organizationWhatsappCta,
+      organizationAddress,
     });
     setSoftwareNameInput(updated.softwareName);
     setSoftwareTagline(updated.softwareTagline);
@@ -111,6 +117,12 @@ export default function SettingsPage() {
     setDateFormat(updated.dateFormat);
     setTimeFormat(updated.timeFormat);
     setMaintenanceMode(updated.maintenanceMode);
+    setStudentPortalName(updated.studentPortalName);
+    setOrganizationMission(updated.organizationMission);
+    setOrganizationEmail(updated.organizationEmail);
+    setOrganizationPhone(updated.organizationPhone);
+    setOrganizationWhatsappCta(updated.organizationWhatsappCta);
+    setOrganizationAddress(updated.organizationAddress);
     setStatusMessage("Settings saved.");
   };
 
