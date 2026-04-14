@@ -18,6 +18,7 @@ import QuickLinksPage from "@/pages/QuickLinksPage";
 import ResearchPage from "@/pages/ResearchPage";
 import AlumniPage from "@/pages/AlumniPage";
 import SettingsPage from "@/pages/SettingsPage";
+import ScholarshipsPage from "@/pages/ScholarshipsPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -44,7 +45,7 @@ const App = () => (
             <Route path="/quick-links" element={<QuickLinksPage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/alumni" element={<AlumniPage />} />
-            <Route path="/scholarships" element={<PlaceholderPage />} />
+            <Route path="/scholarships" element={<ScholarshipsPage />} />
             <Route path="/student-stories" element={<PlaceholderPage />} />
             <Route path="/legal" element={<PlaceholderPage />} />
             <Route path="/settings" element={<SettingsPage />} />
