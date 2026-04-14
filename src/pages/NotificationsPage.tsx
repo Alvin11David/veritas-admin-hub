@@ -78,9 +78,9 @@ export default function NotificationsPage() {
     const term = search.toLowerCase();
     return data.filter((item) => {
       return (
-        item.target.toLowerCase().includes(term) ||
-        item.action.toLowerCase().includes(term) ||
-        item.module.toLowerCase().includes(term)
+        (item.target?.toLowerCase() || "").includes(term) ||
+        (item.action?.toLowerCase() || "").includes(term) ||
+        (item.module?.toLowerCase() || "").includes(term)
       );
     });
   }, [data, search]);
