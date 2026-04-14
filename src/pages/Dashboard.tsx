@@ -6,9 +6,38 @@ import { Plus, Upload, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "@/lib/app-settings";
 
+function formatDateString(date: Date, format: "MM/DD/YYYY" | "DD/MM/YYYY" | "YYYY-MM-DD") {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear());
+
+  if (format === "DD/MM/YYYY") {
+    return `${day}/${month}/${year}`;
+  }
+
+  if (format === "YYYY-MM-DD") {
+    return `${year}-${month}-${day}`;
+  }
+
+  return `${month}/${day}/${year}`;
+}
+
+function formatTimeString(date: Date, timezone: string, format: "12h" | "24h") {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: format === "12h",
+    timeZone: timezone,
+  }).format(date);
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { settings } = useAppSettings();
+  const now = new Date();
+  const localInTimezone = new Date(now.toLocaleString("en-US", { timeZone: settings.timezone }));
+  const formattedDate = formatDateString(localInTimezone, settings.dateFormat);
+  const formattedTime = formatTimeString(now, settings.timezone, settings.timeFormat);
 
   return (
     <div className="space-y-6">
@@ -17,6 +46,9 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {settings.dashboardWelcome}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Local system time: {formattedDate} {formattedTime} ({settings.timezone})
           </p>
         </div>
         <div className="flex items-center gap-2">
