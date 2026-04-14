@@ -10,28 +10,47 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_SOFTWARE_NAME, useAppSettings } from "@/lib/app-settings";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useAppSettings } from "@/lib/app-settings";
 
 export default function SettingsPage() {
-  const { settings, setSoftwareName } = useAppSettings();
+  const { settings, setAppSettings, resetAppSettings } = useAppSettings();
   const [softwareName, setSoftwareNameInput] = useState(settings.softwareName);
+  const [softwareTagline, setSoftwareTagline] = useState(settings.softwareTagline);
+  const [dashboardWelcome, setDashboardWelcome] = useState(settings.dashboardWelcome);
+  const [showNotificationDot, setShowNotificationDot] = useState(settings.showNotificationDot);
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     setSoftwareNameInput(settings.softwareName);
-  }, [settings.softwareName]);
+    setSoftwareTagline(settings.softwareTagline);
+    setDashboardWelcome(settings.dashboardWelcome);
+    setShowNotificationDot(settings.showNotificationDot);
+  }, [settings]);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const updated = setSoftwareName(softwareName);
+    const updated = setAppSettings({
+      softwareName,
+      softwareTagline,
+      dashboardWelcome,
+      showNotificationDot,
+    });
     setSoftwareNameInput(updated.softwareName);
-    setStatusMessage("Software name saved.");
+    setSoftwareTagline(updated.softwareTagline);
+    setDashboardWelcome(updated.dashboardWelcome);
+    setShowNotificationDot(updated.showNotificationDot);
+    setStatusMessage("Settings saved.");
   };
 
   const onReset = () => {
-    const updated = setSoftwareName(DEFAULT_SOFTWARE_NAME);
+    const updated = resetAppSettings();
     setSoftwareNameInput(updated.softwareName);
-    setStatusMessage("Software name reset to default.");
+    setSoftwareTagline(updated.softwareTagline);
+    setDashboardWelcome(updated.dashboardWelcome);
+    setShowNotificationDot(updated.showNotificationDot);
+    setStatusMessage("Settings reset to defaults.");
   };
 
   return (
@@ -45,14 +64,13 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Software Branding</CardTitle>
+          <CardTitle>General Settings</CardTitle>
           <CardDescription>
-            Choose the software name displayed in the sidebar and browser tab
-            title.
+            Configure branding and interface behavior for this admin workspace.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" onSubmit={onSubmit}>
+          <form className="space-y-5" onSubmit={onSubmit}>
             <div className="space-y-2">
               <Label htmlFor="software-name">Software name</Label>
               <Input
@@ -72,9 +90,62 @@ export default function SettingsPage() {
               </p>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="software-tagline">Sidebar tagline</Label>
+              <Input
+                id="software-tagline"
+                value={softwareTagline}
+                onChange={(event) => {
+                  setSoftwareTagline(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="Admin Panel"
+                maxLength={80}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dashboard-welcome">Dashboard welcome text</Label>
+              <Input
+                id="dashboard-welcome"
+                value={dashboardWelcome}
+                onChange={(event) => {
+                  setDashboardWelcome(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="Welcome back, Admin"
+                maxLength={120}
+              />
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between gap-4 rounded-md border border-border p-3">
+              <div>
+                <Label htmlFor="show-notification-dot">Header notification badge</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Show a small status dot on the notification bell in the header.
+                </p>
+              </div>
+              <Switch
+                id="show-notification-dot"
+                checked={showNotificationDot}
+                onCheckedChange={(checked) => {
+                  setShowNotificationDot(checked);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+              />
+            </div>
+
             <div className="flex flex-wrap items-center gap-2">
               <Button type="submit" size="sm">
-                <Save className="h-4 w-4" /> Save Name
+                <Save className="h-4 w-4" /> Save Settings
               </Button>
               <Button
                 type="button"
@@ -82,7 +153,7 @@ export default function SettingsPage() {
                 size="sm"
                 onClick={onReset}
               >
-                <RotateCcw className="h-4 w-4" /> Reset Default
+                <RotateCcw className="h-4 w-4" /> Reset Defaults
               </Button>
             </div>
             {statusMessage && (
