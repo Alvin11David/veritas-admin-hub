@@ -108,7 +108,9 @@ export function AdminSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-          <span className="text-primary-foreground font-bold text-sm">{softwareInitial}</span>
+          <span className="text-primary-foreground font-bold text-sm">
+            {softwareInitial}
+          </span>
         </div>
         {!collapsed && (
           <div className="min-w-0">

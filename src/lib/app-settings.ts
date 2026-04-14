@@ -35,7 +35,9 @@ export function getAppSettings(): AppSettings {
   try {
     const parsed = JSON.parse(raw) as Partial<AppSettings>;
     return {
-      softwareName: normalizeSoftwareName(parsed.softwareName ?? defaultSettings.softwareName),
+      softwareName: normalizeSoftwareName(
+        parsed.softwareName ?? defaultSettings.softwareName,
+      ),
     };
   } catch {
     return defaultSettings;
@@ -53,7 +55,10 @@ export function saveAppSettings(next: Partial<AppSettings>) {
   };
 
   if (canUseWindow()) {
-    window.localStorage.setItem(APP_SETTINGS_STORAGE_KEY, JSON.stringify(normalized));
+    window.localStorage.setItem(
+      APP_SETTINGS_STORAGE_KEY,
+      JSON.stringify(normalized),
+    );
     window.dispatchEvent(new Event(APP_SETTINGS_UPDATED_EVENT));
   }
 
