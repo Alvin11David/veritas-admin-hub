@@ -83,6 +83,12 @@ export default function SettingsPage() {
     setDateFormat(settings.dateFormat);
     setTimeFormat(settings.timeFormat);
     setMaintenanceMode(settings.maintenanceMode);
+    setStudentPortalName(settings.studentPortalName);
+    setOrganizationMission(settings.organizationMission);
+    setOrganizationEmail(settings.organizationEmail);
+    setOrganizationPhone(settings.organizationPhone);
+    setOrganizationWhatsappCta(settings.organizationWhatsappCta);
+    setOrganizationAddress(settings.organizationAddress);
   }, [settings]);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
