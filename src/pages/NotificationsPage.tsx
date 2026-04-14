@@ -7,9 +7,9 @@ import { toast } from "sonner";
 
 interface NotificationItem {
   id: string;
-  action: string;
-  target: string;
-  user: string;
+  action?: string;
+  target?: string;
+  user?: string;
   type: "create" | "update" | "delete";
   module:
     | "faculty"
@@ -19,7 +19,9 @@ interface NotificationItem {
     | "faqs"
     | "quick-links"
     | "research"
-    | "alumni";
+    | "alumni"
+    | "scholarships"
+    | "student-stories";
   timestamp?: string;
   createdAt?: string;
 }
@@ -35,6 +37,27 @@ function formatTimestamp(value?: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "just now";
   return date.toLocaleString();
+}
+
+function asText(value: unknown, fallback = "") {
+  return typeof value === "string" ? value : fallback;
+}
+
+function toLowerText(value: unknown) {
+  return asText(value).toLowerCase();
+}
+
+function getActionText(item: NotificationItem) {
+  const action = asText(item.action);
+  if (action) return action.toLowerCase();
+
+  if (item.type === "update") return "updated";
+  if (item.type === "delete") return "deleted";
+  return "created";
+}
+
+function getModuleText(item: NotificationItem) {
+  return asText(item.module, "unknown module");
 }
 
 export default function NotificationsPage() {
@@ -53,9 +76,17 @@ export default function NotificationsPage() {
       const notifications: NotificationItem[] = [];
 
       snapshot.forEach((snapshotDoc) => {
+        const data = snapshotDoc.data() as Partial<Omit<NotificationItem, "id">>;
+
         notifications.push({
           id: snapshotDoc.id,
-          ...(snapshotDoc.data() as Omit<NotificationItem, "id">),
+          action: asText(data.action),
+          target: asText(data.target),
+          user: asText(data.user, "Admin"),
+          type: data.type === "update" || data.type === "delete" ? data.type : "create",
+          module: data.module ?? "faculty",
+          timestamp: asText(data.timestamp),
+          createdAt: asText(data.createdAt),
         });
       });
 
@@ -78,9 +109,9 @@ export default function NotificationsPage() {
     const term = search.toLowerCase();
     return data.filter((item) => {
       return (
-        (item.target?.toLowerCase() || "").includes(term) ||
-        (item.action?.toLowerCase() || "").includes(term) ||
-        (item.module?.toLowerCase() || "").includes(term)
+        toLowerText(item.target).includes(term) ||
+        toLowerText(item.action).includes(term) ||
+        toLowerText(item.module).includes(term)
       );
     });
   }, [data, search]);
@@ -134,11 +165,10 @@ export default function NotificationsPage() {
                       <span className="text-muted-foreground">
                         {item.user || "Admin"}
                       </span>{" "}
-                      {item.action.toLowerCase() || "did something to"}
-                      <span className="font-medium">{item.target || "an item"}</span>
+                      {getActionText(item)} {item.target || `an item in ${getModuleText(item)}`}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Module: {item.module}
+                      Module: {getModuleText(item)}
                     </p>
                   </div>
                   <span className="text-xs text-muted-foreground whitespace-nowrap">
