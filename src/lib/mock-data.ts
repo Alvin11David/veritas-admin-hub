@@ -72,7 +72,6 @@ export const dashboardStats = [
   { label: "Alumni", count: 42, icon: "Award" },
   { label: "Scholarships", count: 16, icon: "DollarSign" },
   { label: "Student Stories", count: 20, icon: "MessageSquare" },
-  { label: "Legal Pages", count: 6, icon: "FileText" },
   { label: "Submissions", count: 89, icon: "Mail" },
 ];
 
