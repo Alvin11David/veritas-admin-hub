@@ -96,76 +96,79 @@ function normalizeTimezone(value: string | undefined): string {
   }
 }
 
-export function getAppSettings(): AppSettings {
-  if (!canUseWindow()) {
+function normalizeFirestoreData(
+  data: Partial<AppSettings> | undefined,
+): AppSettings {
+  if (!data) {
     return APP_SETTINGS_DEFAULTS;
   }
 
-  const raw = window.localStorage.getItem(APP_SETTINGS_STORAGE_KEY);
-  if (!raw) {
-    return APP_SETTINGS_DEFAULTS;
-  }
-
-  try {
-    const parsed = JSON.parse(raw) as Partial<AppSettings>;
-    return {
-      softwareName: normalizeText(
-        parsed.softwareName ?? APP_SETTINGS_DEFAULTS.softwareName,
-        DEFAULT_SOFTWARE_NAME,
-      ),
-      softwareTagline: normalizeText(
-        parsed.softwareTagline ?? APP_SETTINGS_DEFAULTS.softwareTagline,
-        DEFAULT_SOFTWARE_TAGLINE,
-      ),
-      dashboardWelcome: normalizeText(
-        parsed.dashboardWelcome ?? APP_SETTINGS_DEFAULTS.dashboardWelcome,
-        DEFAULT_DASHBOARD_WELCOME,
-      ),
-      showNotificationDot:
-        typeof parsed.showNotificationDot === "boolean"
-          ? parsed.showNotificationDot
-          : APP_SETTINGS_DEFAULTS.showNotificationDot,
-      timezone: normalizeTimezone(parsed.timezone),
-      dateFormat: normalizeDateFormat(parsed.dateFormat),
-      timeFormat: normalizeTimeFormat(parsed.timeFormat),
-      maintenanceMode:
-        typeof parsed.maintenanceMode === "boolean"
-          ? parsed.maintenanceMode
-          : APP_SETTINGS_DEFAULTS.maintenanceMode,
-      studentPortalName: normalizeText(
-        parsed.studentPortalName ?? APP_SETTINGS_DEFAULTS.studentPortalName,
-        "",
-      ),
-      organizationMission: normalizeText(
-        parsed.organizationMission ?? APP_SETTINGS_DEFAULTS.organizationMission,
-        "",
-      ),
-      organizationEmail: normalizeText(
-        parsed.organizationEmail ?? APP_SETTINGS_DEFAULTS.organizationEmail,
-        "",
-      ),
-      organizationPhone: normalizeText(
-        parsed.organizationPhone ?? APP_SETTINGS_DEFAULTS.organizationPhone,
-        "",
-      ),
-      organizationWhatsappCta: normalizeText(
-        parsed.organizationWhatsappCta ??
-          APP_SETTINGS_DEFAULTS.organizationWhatsappCta,
-        "",
-      ),
-      organizationAddress: normalizeText(
-        parsed.organizationAddress ?? APP_SETTINGS_DEFAULTS.organizationAddress,
-        "",
-      ),
-    };
-  } catch {
-    return APP_SETTINGS_DEFAULTS;
-  }
+  return {
+    softwareName: normalizeText(
+      data.softwareName ?? APP_SETTINGS_DEFAULTS.softwareName,
+      DEFAULT_SOFTWARE_NAME,
+    ),
+    softwareTagline: normalizeText(
+      data.softwareTagline ?? APP_SETTINGS_DEFAULTS.softwareTagline,
+      DEFAULT_SOFTWARE_TAGLINE,
+    ),
+    dashboardWelcome: normalizeText(
+      data.dashboardWelcome ?? APP_SETTINGS_DEFAULTS.dashboardWelcome,
+      DEFAULT_DASHBOARD_WELCOME,
+    ),
+    showNotificationDot:
+      typeof data.showNotificationDot === "boolean"
+        ? data.showNotificationDot
+        : APP_SETTINGS_DEFAULTS.showNotificationDot,
+    timezone: normalizeTimezone(data.timezone),
+    dateFormat: normalizeDateFormat(data.dateFormat),
+    timeFormat: normalizeTimeFormat(data.timeFormat),
+    maintenanceMode:
+      typeof data.maintenanceMode === "boolean"
+        ? data.maintenanceMode
+        : APP_SETTINGS_DEFAULTS.maintenanceMode,
+    studentPortalName: normalizeText(
+      data.studentPortalName ?? APP_SETTINGS_DEFAULTS.studentPortalName,
+      "",
+    ),
+    organizationMission: normalizeText(
+      data.organizationMission ?? APP_SETTINGS_DEFAULTS.organizationMission,
+      "",
+    ),
+    organizationEmail: normalizeText(
+      data.organizationEmail ?? APP_SETTINGS_DEFAULTS.organizationEmail,
+      "",
+    ),
+    organizationPhone: normalizeText(
+      data.organizationPhone ?? APP_SETTINGS_DEFAULTS.organizationPhone,
+      "",
+    ),
+    organizationWhatsappCta: normalizeText(
+      data.organizationWhatsappCta ??
+        APP_SETTINGS_DEFAULTS.organizationWhatsappCta,
+      "",
+    ),
+    organizationAddress: normalizeText(
+      data.organizationAddress ?? APP_SETTINGS_DEFAULTS.organizationAddress,
+      "",
+    ),
+  };
 }
 
-export function saveAppSettings(next: Partial<AppSettings>) {
+export async function getAppSettingsFromFirestore(): Promise<AppSettings> {
+  try {
+    const docRef = doc(collection(db, FIRESTORE_COLLECTION), FIRESTORE_DOC_ID);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return normalizeFirestoreData(docSnap.data() as Partial<AppSettings>);
+    }
+async function saveAppSettingsToFirestore(
+  current: AppSettings,
+  next: Partial<AppSettings>,
+): Promise<AppSettings> {
   const merged: AppSettings = {
-    ...getAppSettings(),
+    ...current,
     ...next,
   };
 
@@ -192,7 +195,14 @@ export function saveAppSettings(next: Partial<AppSettings>) {
     organizationAddress: normalizeText(merged.organizationAddress, ""),
   };
 
-  if (canUseWindow()) {
+  try {
+    const docRef = doc(collection(db, FIRESTORE_COLLECTION), FIRESTORE_DOC_ID);
+    await setDoc(docRef, normalized);
+    return normalized;
+  } catch (error) {
+    console.error("Error saving app settings to Firestore:", error);
+    throw error;
+  }) {
     window.localStorage.setItem(
       APP_SETTINGS_STORAGE_KEY,
       JSON.stringify(normalized),
@@ -202,50 +212,65 @@ export function saveAppSettings(next: Partial<AppSettings>) {
 
   return normalized;
 }
-
-export function useAppSettings() {
-  const [settings, setSettings] = useState<AppSettings>(() => getAppSettings());
+APP_SETTINGS_DEFAULTS);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!canUseWindow()) {
-      return;
-    }
-
-    const refresh = () => {
-      setSettings(getAppSettings());
-    };
-
-    const onStorage = (event: StorageEvent) => {
-      if (!event.key || event.key === APP_SETTINGS_STORAGE_KEY) {
-        refresh();
+    // Initial load from Firestore
+    const loadSettings = async () => {
+      try {
+        const data = await getAppSettingsFromFirestore();
+        setSettings(data);
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+        setSettings(APP_SETTINGS_DEFAULTS);
+      } finally {
+        setLoading(false);
       }
     };
 
-    window.addEventListener("storage", onStorage);
-    window.addEventListener(APP_SETTINGS_UPDATED_EVENT, refresh);
+    loadSettings();
 
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener(APP_SETTINGS_UPDATED_EVENT, refresh);
-    };
+    // Subscribe to real-time updates from Firestore
+    const unsubscribe = onSnapshot(
+      doc(collection(db, FIRESTORE_COLLECTION), FIRESTORE_DOC_ID),
+      (docSnap: DocumentSnapshot) => {
+        if (docSnap.exists()) {
+          const data = normalizeFirestoreData(
+            docSnap.data() as Partial<AppSettings>,
+          );
+          setSettings(data);
+        } else {
+          setSettings(APP_SETTINGS_DEFAULTS);
+        }
+      },
+      (error) => {
+        console.error("Error listening to settings:", error);
+      },
+    );
+
+    return () => unsubscribe();
   }, []);
 
-  const setAppSettings = (next: Partial<AppSettings>) => {
-    const updated = saveAppSettings(next);
-    setSettings(updated);
-    return updated;
+  const setAppSettings = async (next: Partial<AppSettings>) => {
+    try {
+      const updated = await saveAppSettingsToFirestore(settings, next);
+      setSettings(updated);
+      return updated;
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      throw error;
+    }
   };
 
-  const setSoftwareName = (softwareName: string) => {
-    return setAppSettings({ softwareName });
-  };
-
-  const resetAppSettings = () => {
+  const resetAppSettings = async () => {
     return setAppSettings(APP_SETTINGS_DEFAULTS);
   };
 
   return {
     settings,
+    loading,
+    setAppSettings
     setAppSettings,
     setSoftwareName,
     resetAppSettings,
