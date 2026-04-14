@@ -45,6 +45,7 @@ export default function SettingsPage() {
   const [dashboardWelcome, setDashboardWelcome] = useState(
     settings.dashboardWelcome,
   );
+  const [currentYear, setCurrentYear] = useState(settings.currentYear);
   const [showNotificationDot, setShowNotificationDot] = useState(
     settings.showNotificationDot,
   );
@@ -79,6 +80,7 @@ export default function SettingsPage() {
     setSoftwareNameInput(settings.softwareName);
     setSoftwareTagline(settings.softwareTagline);
     setDashboardWelcome(settings.dashboardWelcome);
+    setCurrentYear(settings.currentYear);
     setShowNotificationDot(settings.showNotificationDot);
     setTimezone(settings.timezone);
     setDateFormat(settings.dateFormat);
@@ -100,6 +102,7 @@ export default function SettingsPage() {
         softwareName,
         softwareTagline,
         dashboardWelcome,
+        currentYear,
         showNotificationDot,
         timezone,
         dateFormat,
@@ -226,6 +229,22 @@ export default function SettingsPage() {
                   }}
                   placeholder="Welcome back, Admin"
                   maxLength={120}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="current-year">Current year</Label>
+                <Input
+                  id="current-year"
+                  value={currentYear}
+                  onChange={(event) => {
+                    setCurrentYear(event.target.value);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                  placeholder="2026"
+                  maxLength={4}
                 />
               </div>
             </CardContent>
