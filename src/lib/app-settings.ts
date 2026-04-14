@@ -4,18 +4,26 @@ const APP_SETTINGS_STORAGE_KEY = "veritas-admin-hub.app-settings";
 const APP_SETTINGS_UPDATED_EVENT = "veritas-admin-hub.app-settings-updated";
 
 export const DEFAULT_SOFTWARE_NAME = "Application Management";
+export const DEFAULT_SOFTWARE_TAGLINE = "Admin Panel";
+export const DEFAULT_DASHBOARD_WELCOME = "Welcome back, Admin";
 
 export interface AppSettings {
   softwareName: string;
+  softwareTagline: string;
+  dashboardWelcome: string;
+  showNotificationDot: boolean;
 }
 
-const defaultSettings: AppSettings = {
+export const APP_SETTINGS_DEFAULTS: AppSettings = {
   softwareName: DEFAULT_SOFTWARE_NAME,
+  softwareTagline: DEFAULT_SOFTWARE_TAGLINE,
+  dashboardWelcome: DEFAULT_DASHBOARD_WELCOME,
+  showNotificationDot: true,
 };
 
-function normalizeSoftwareName(value: string) {
+function normalizeText(value: string, fallback: string) {
   const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : DEFAULT_SOFTWARE_NAME;
+  return trimmed.length > 0 ? trimmed : fallback;
 }
 
 function canUseWindow() {
@@ -24,23 +32,33 @@ function canUseWindow() {
 
 export function getAppSettings(): AppSettings {
   if (!canUseWindow()) {
-    return defaultSettings;
+    return APP_SETTINGS_DEFAULTS;
   }
 
   const raw = window.localStorage.getItem(APP_SETTINGS_STORAGE_KEY);
   if (!raw) {
-    return defaultSettings;
+    return APP_SETTINGS_DEFAULTS;
   }
 
   try {
     const parsed = JSON.parse(raw) as Partial<AppSettings>;
     return {
-      softwareName: normalizeSoftwareName(
-        parsed.softwareName ?? defaultSettings.softwareName,
+      softwareName: normalizeText(parsed.softwareName ?? APP_SETTINGS_DEFAULTS.softwareName, DEFAULT_SOFTWARE_NAME),
+      softwareTagline: normalizeText(
+        parsed.softwareTagline ?? APP_SETTINGS_DEFAULTS.softwareTagline,
+        DEFAULT_SOFTWARE_TAGLINE,
       ),
+      dashboardWelcome: normalizeText(
+        parsed.dashboardWelcome ?? APP_SETTINGS_DEFAULTS.dashboardWelcome,
+        DEFAULT_DASHBOARD_WELCOME,
+      ),
+      showNotificationDot:
+        typeof parsed.showNotificationDot === "boolean"
+          ? parsed.showNotificationDot
+          : APP_SETTINGS_DEFAULTS.showNotificationDot,
     };
   } catch {
-    return defaultSettings;
+    return APP_SETTINGS_DEFAULTS;
   }
 }
 
@@ -51,7 +69,10 @@ export function saveAppSettings(next: Partial<AppSettings>) {
   };
 
   const normalized: AppSettings = {
-    softwareName: normalizeSoftwareName(merged.softwareName),
+    softwareName: normalizeText(merged.softwareName, DEFAULT_SOFTWARE_NAME),
+    softwareTagline: normalizeText(merged.softwareTagline, DEFAULT_SOFTWARE_TAGLINE),
+    dashboardWelcome: normalizeText(merged.dashboardWelcome, DEFAULT_DASHBOARD_WELCOME),
+    showNotificationDot: Boolean(merged.showNotificationDot),
   };
 
   if (canUseWindow()) {
@@ -92,14 +113,24 @@ export function useAppSettings() {
     };
   }, []);
 
-  const setSoftwareName = (softwareName: string) => {
-    const updated = saveAppSettings({ softwareName });
+  const setAppSettings = (next: Partial<AppSettings>) => {
+    const updated = saveAppSettings(next);
     setSettings(updated);
     return updated;
   };
 
+  const setSoftwareName = (softwareName: string) => {
+    return setAppSettings({ softwareName });
+  };
+
+  const resetAppSettings = () => {
+    return setAppSettings(APP_SETTINGS_DEFAULTS);
+  };
+
   return {
     settings,
+    setAppSettings,
     setSoftwareName,
+    resetAppSettings,
   };
 }
