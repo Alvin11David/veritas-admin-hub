@@ -330,12 +330,15 @@ export default function SettingsPage() {
               <Globe className="h-4 w-4 text-primary" /> Organization Info
             </CardTitle>
             <CardDescription>
-              Configure student portal name, mission, and contact information displayed across the platform.
+              Configure student portal name, mission, and contact information
+              displayed across the platform.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="student-portal-name">Student Application Portal Name</Label>
+              <Label htmlFor="student-portal-name">
+                Student Application Portal Name
+              </Label>
               <Input
                 id="student-portal-name"
                 value={studentPortalName}
@@ -405,7 +408,9 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="organization-whatsapp">WhatsApp Call-to-Action</Label>
+              <Label htmlFor="organization-whatsapp">
+                WhatsApp Call-to-Action
+              </Label>
               <Input
                 id="organization-whatsapp"
                 value={organizationWhatsappCta}
