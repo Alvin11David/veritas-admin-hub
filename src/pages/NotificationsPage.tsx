@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Loader2, Plus, Pencil, Trash2 } from "lucide-react";
 import { db } from "@/config/firebase";
@@ -235,9 +235,7 @@ export default function NotificationsPage() {
               </CardContent>
             </Card>
           )}
-          </div>
-      ) : (
-        <div />
+        </div>
       )}
     </div>
   );
