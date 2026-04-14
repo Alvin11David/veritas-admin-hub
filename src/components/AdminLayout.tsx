@@ -34,7 +34,9 @@ export function AdminLayout() {
               <ThemeToggle />
               <button className="relative p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
                 <Bell className="h-4 w-4" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+                {settings.showNotificationDot && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+                )}
               </button>
               <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
                 <span className="text-xs font-medium text-primary">A</span>
