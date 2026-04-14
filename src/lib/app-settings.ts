@@ -27,6 +27,12 @@ export interface AppSettings {
   dateFormat: DateFormat;
   timeFormat: TimeFormat;
   maintenanceMode: boolean;
+  studentPortalName: string;
+  organizationMission: string;
+  organizationEmail: string;
+  organizationPhone: string;
+  organizationWhatsappCta: string;
+  organizationAddress: string;
 }
 
 export const APP_SETTINGS_DEFAULTS: AppSettings = {
@@ -111,6 +117,30 @@ export function getAppSettings(): AppSettings {
         typeof parsed.maintenanceMode === "boolean"
           ? parsed.maintenanceMode
           : APP_SETTINGS_DEFAULTS.maintenanceMode,
+      studentPortalName: normalizeText(
+        parsed.studentPortalName ?? APP_SETTINGS_DEFAULTS.studentPortalName,
+        "",
+      ),
+      organizationMission: normalizeText(
+        parsed.organizationMission ?? APP_SETTINGS_DEFAULTS.organizationMission,
+        "",
+      ),
+      organizationEmail: normalizeText(
+        parsed.organizationEmail ?? APP_SETTINGS_DEFAULTS.organizationEmail,
+        "",
+      ),
+      organizationPhone: normalizeText(
+        parsed.organizationPhone ?? APP_SETTINGS_DEFAULTS.organizationPhone,
+        "",
+      ),
+      organizationWhatsappCta: normalizeText(
+        parsed.organizationWhatsappCta ?? APP_SETTINGS_DEFAULTS.organizationWhatsappCta,
+        "",
+      ),
+      organizationAddress: normalizeText(
+        parsed.organizationAddress ?? APP_SETTINGS_DEFAULTS.organizationAddress,
+        "",
+      ),
     };
   } catch {
     return APP_SETTINGS_DEFAULTS;
