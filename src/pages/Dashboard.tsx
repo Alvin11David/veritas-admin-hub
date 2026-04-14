@@ -15,7 +15,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "@/lib/app-settings";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 function formatDateString(
   date: Date,
@@ -101,10 +107,16 @@ export default function Dashboard() {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Gauge className="h-4 w-4" />
-                    <span className="text-xs uppercase tracking-wider">Modules</span>
+                    <span className="text-xs uppercase tracking-wider">
+                      Modules
+                    </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold text-foreground">{totalContentModules}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Managed sections</p>
+                  <p className="mt-2 text-2xl font-bold text-foreground">
+                    {totalContentModules}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Managed sections
+                  </p>
                 </CardContent>
               </Card>
 
@@ -112,10 +124,16 @@ export default function Dashboard() {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <MessageSquareText className="h-4 w-4" />
-                    <span className="text-xs uppercase tracking-wider">Activity</span>
+                    <span className="text-xs uppercase tracking-wider">
+                      Activity
+                    </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold text-foreground">{recentActivity.length}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Recent updates</p>
+                  <p className="mt-2 text-2xl font-bold text-foreground">
+                    {recentActivity.length}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Recent updates
+                  </p>
                 </CardContent>
               </Card>
 
@@ -123,10 +141,16 @@ export default function Dashboard() {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Sparkles className="h-4 w-4" />
-                    <span className="text-xs uppercase tracking-wider">Status</span>
+                    <span className="text-xs uppercase tracking-wider">
+                      Status
+                    </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold text-foreground">Live</p>
-                  <p className="text-xs text-muted-foreground mt-1">System ready</p>
+                  <p className="mt-2 text-2xl font-bold text-foreground">
+                    Live
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    System ready
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -139,7 +163,11 @@ export default function Dashboard() {
             <Button variant="outline" className="border-border">
               <Download className="h-4 w-4 mr-1" /> Export
             </Button>
-            <Button variant="outline" className="border-border" onClick={() => navigate("/notifications")}>
+            <Button
+              variant="outline"
+              className="border-border"
+              onClick={() => navigate("/notifications")}
+            >
               View Notifications <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           </div>
@@ -172,9 +200,7 @@ export default function Dashboard() {
             <CardTitle className="flex items-center gap-2 text-lg">
               <Upload className="h-4 w-4 text-primary" /> Quick Actions
             </CardTitle>
-            <CardDescription>
-              Jump into common admin tasks.
-            </CardDescription>
+            <CardDescription>Jump into common admin tasks.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {activeQuickActions.map((action) => (
