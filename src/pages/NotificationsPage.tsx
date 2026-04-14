@@ -115,7 +115,7 @@ export default function NotificationsPage() {
       ) : (
         <div className="space-y-2">
           {filtered.map((item) => {
-            const config = typeConfig[item.type];
+            const config = typeConfig[item.type] || typeConfig.create;
             const Icon = config.icon;
 
             return (
