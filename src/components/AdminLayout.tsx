@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Bell, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useAppSettings } from "@/lib/app-settings";
 
 export function AdminLayout() {
   const { settings } = useAppSettings();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = settings.softwareName;
@@ -38,7 +39,12 @@ export function AdminLayout() {
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              <button className="relative p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+              <button
+                type="button"
+                onClick={() => navigate("/notifications")}
+                className="relative p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                aria-label="Open notifications"
+              >
                 <Bell className="h-4 w-4" />
                 {settings.showNotificationDot && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
