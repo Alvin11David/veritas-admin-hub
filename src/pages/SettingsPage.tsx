@@ -42,7 +42,9 @@ export default function SettingsPage() {
   const [timezone, setTimezone] = useState(settings.timezone);
   const [dateFormat, setDateFormat] = useState<DateFormat>(settings.dateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormat>(settings.timeFormat);
-  const [maintenanceMode, setMaintenanceMode] = useState(settings.maintenanceMode);
+  const [maintenanceMode, setMaintenanceMode] = useState(
+    settings.maintenanceMode,
+  );
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
@@ -178,7 +180,8 @@ export default function SettingsPage() {
                 maxLength={80}
               />
               <p className="text-xs text-muted-foreground">
-                Use an IANA timezone value, for example: America/New_York or Asia/Manila.
+                Use an IANA timezone value, for example: America/New_York or
+                Asia/Manila.
               </p>
             </div>
 
@@ -257,7 +260,8 @@ export default function SettingsPage() {
                 <div>
                   <Label htmlFor="maintenance-mode">Maintenance mode</Label>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Shows a global maintenance notice banner across the admin interface.
+                    Shows a global maintenance notice banner across the admin
+                    interface.
                   </p>
                 </div>
                 <Switch

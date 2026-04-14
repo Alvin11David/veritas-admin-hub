@@ -8,7 +8,11 @@ export const DEFAULT_SOFTWARE_TAGLINE = "Admin Panel";
 export const DEFAULT_DASHBOARD_WELCOME = "Welcome back, Admin";
 export const DEFAULT_TIMEZONE = "UTC";
 
-export const DATE_FORMAT_OPTIONS = ["MM/DD/YYYY", "DD/MM/YYYY", "YYYY-MM-DD"] as const;
+export const DATE_FORMAT_OPTIONS = [
+  "MM/DD/YYYY",
+  "DD/MM/YYYY",
+  "YYYY-MM-DD",
+] as const;
 export const TIME_FORMAT_OPTIONS = ["12h", "24h"] as const;
 
 export type DateFormat = (typeof DATE_FORMAT_OPTIONS)[number];

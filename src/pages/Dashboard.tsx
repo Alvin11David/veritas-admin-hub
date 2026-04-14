@@ -6,7 +6,10 @@ import { Plus, Upload, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "@/lib/app-settings";
 
-function formatDateString(date: Date, format: "MM/DD/YYYY" | "DD/MM/YYYY" | "YYYY-MM-DD") {
+function formatDateString(
+  date: Date,
+  format: "MM/DD/YYYY" | "DD/MM/YYYY" | "YYYY-MM-DD",
+) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = String(date.getFullYear());
@@ -35,9 +38,15 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { settings } = useAppSettings();
   const now = new Date();
-  const localInTimezone = new Date(now.toLocaleString("en-US", { timeZone: settings.timezone }));
+  const localInTimezone = new Date(
+    now.toLocaleString("en-US", { timeZone: settings.timezone }),
+  );
   const formattedDate = formatDateString(localInTimezone, settings.dateFormat);
-  const formattedTime = formatTimeString(now, settings.timezone, settings.timeFormat);
+  const formattedTime = formatTimeString(
+    now,
+    settings.timezone,
+    settings.timeFormat,
+  );
 
   return (
     <div className="space-y-6">
@@ -48,7 +57,8 @@ export default function Dashboard() {
             {settings.dashboardWelcome}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            Local system time: {formattedDate} {formattedTime} ({settings.timezone})
+            Local system time: {formattedDate} {formattedTime} (
+            {settings.timezone})
           </p>
         </div>
         <div className="flex items-center gap-2">
