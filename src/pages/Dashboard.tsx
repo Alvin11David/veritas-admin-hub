@@ -4,16 +4,18 @@ import { dashboardStats, recentActivity } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAppSettings } from "@/lib/app-settings";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { settings } = useAppSettings();
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">Welcome back, Admin</p>
+          <p className="text-sm text-muted-foreground mt-1">{settings.dashboardWelcome}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="border-border">
