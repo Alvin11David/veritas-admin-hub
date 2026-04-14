@@ -357,7 +357,9 @@ export default function ScholarshipsPage() {
                       No scholarships yet
                     </h3>
                     <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                      The admin needs to create the first scholarship record. Click Add New to add a title, deadline, amount, and application link.
+                      The admin needs to create the first scholarship record.
+                      Click Add New to add a title, deadline, amount, and
+                      application link.
                     </p>
                     <Button className="mt-5" onClick={openCreate}>
                       Add First Scholarship
