@@ -12,7 +12,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { useAppSettings } from "@/lib/app-settings";
+import {
+  DATE_FORMAT_OPTIONS,
+  TIME_FORMAT_OPTIONS,
+  type DateFormat,
+  type TimeFormat,
+  useAppSettings,
+} from "@/lib/app-settings";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function SettingsPage() {
   const { settings, setAppSettings, resetAppSettings } = useAppSettings();
@@ -26,6 +39,10 @@ export default function SettingsPage() {
   const [showNotificationDot, setShowNotificationDot] = useState(
     settings.showNotificationDot,
   );
+  const [timezone, setTimezone] = useState(settings.timezone);
+  const [dateFormat, setDateFormat] = useState<DateFormat>(settings.dateFormat);
+  const [timeFormat, setTimeFormat] = useState<TimeFormat>(settings.timeFormat);
+  const [maintenanceMode, setMaintenanceMode] = useState(settings.maintenanceMode);
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
@@ -33,6 +50,10 @@ export default function SettingsPage() {
     setSoftwareTagline(settings.softwareTagline);
     setDashboardWelcome(settings.dashboardWelcome);
     setShowNotificationDot(settings.showNotificationDot);
+    setTimezone(settings.timezone);
+    setDateFormat(settings.dateFormat);
+    setTimeFormat(settings.timeFormat);
+    setMaintenanceMode(settings.maintenanceMode);
   }, [settings]);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -42,11 +63,19 @@ export default function SettingsPage() {
       softwareTagline,
       dashboardWelcome,
       showNotificationDot,
+      timezone,
+      dateFormat,
+      timeFormat,
+      maintenanceMode,
     });
     setSoftwareNameInput(updated.softwareName);
     setSoftwareTagline(updated.softwareTagline);
     setDashboardWelcome(updated.dashboardWelcome);
     setShowNotificationDot(updated.showNotificationDot);
+    setTimezone(updated.timezone);
+    setDateFormat(updated.dateFormat);
+    setTimeFormat(updated.timeFormat);
+    setMaintenanceMode(updated.maintenanceMode);
     setStatusMessage("Settings saved.");
   };
 
@@ -56,6 +85,10 @@ export default function SettingsPage() {
     setSoftwareTagline(updated.softwareTagline);
     setDashboardWelcome(updated.dashboardWelcome);
     setShowNotificationDot(updated.showNotificationDot);
+    setTimezone(updated.timezone);
+    setDateFormat(updated.dateFormat);
+    setTimeFormat(updated.timeFormat);
+    setMaintenanceMode(updated.maintenanceMode);
     setStatusMessage("Settings reset to defaults.");
   };
 
@@ -130,6 +163,75 @@ export default function SettingsPage() {
 
             <Separator />
 
+            <div className="space-y-2">
+              <Label htmlFor="timezone">Timezone</Label>
+              <Input
+                id="timezone"
+                value={timezone}
+                onChange={(event) => {
+                  setTimezone(event.target.value);
+                  if (statusMessage) {
+                    setStatusMessage("");
+                  }
+                }}
+                placeholder="UTC"
+                maxLength={80}
+              />
+              <p className="text-xs text-muted-foreground">
+                Use an IANA timezone value, for example: America/New_York or Asia/Manila.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Date format</Label>
+                <Select
+                  value={dateFormat}
+                  onValueChange={(value) => {
+                    setDateFormat(value as DateFormat);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select date format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DATE_FORMAT_OPTIONS.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Time format</Label>
+                <Select
+                  value={timeFormat}
+                  onValueChange={(value) => {
+                    setTimeFormat(value as TimeFormat);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select time format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIME_FORMAT_OPTIONS.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option === "12h" ? "12-hour" : "24-hour"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             <div className="flex items-center justify-between gap-4 rounded-md border border-border p-3">
               <div>
                 <Label htmlFor="show-notification-dot">
@@ -150,6 +252,25 @@ export default function SettingsPage() {
                   }
                 }}
               />
+
+              <div className="flex items-center justify-between gap-4 rounded-md border border-border p-3">
+                <div>
+                  <Label htmlFor="maintenance-mode">Maintenance mode</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Shows a global maintenance notice banner across the admin interface.
+                  </p>
+                </div>
+                <Switch
+                  id="maintenance-mode"
+                  checked={maintenanceMode}
+                  onCheckedChange={(checked) => {
+                    setMaintenanceMode(checked);
+                    if (statusMessage) {
+                      setStatusMessage("");
+                    }
+                  }}
+                />
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
