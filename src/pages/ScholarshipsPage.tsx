@@ -350,81 +350,96 @@ export default function ScholarshipsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <DataTable
-                  title="Scholarships"
-                  data={data}
-                  searchKey="title"
-                  onAdd={openCreate}
-                  onEdit={openEdit}
-                  onDelete={handleDelete}
-                  columns={[
-                    {
-                      key: "title",
-                      label: "Title",
-                      render: (item) => (
-                        <span className="font-medium">{item.title}</span>
-                      ),
-                    },
-                    {
-                      key: "amount",
-                      label: "Amount",
-                      render: (item) => (
-                        <span className="text-muted-foreground">
-                          {item.amount}
-                        </span>
-                      ),
-                    },
-                    {
-                      key: "deadline",
-                      label: "Deadline",
-                      render: (item) => (
-                        <span className="inline-flex items-center gap-1.5 text-sm">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          {formatDeadline(item.deadline)}
-                        </span>
-                      ),
-                    },
-                    {
-                      key: "status",
-                      label: "Status",
-                      render: (item) => {
-                        const status = getStatus(item);
-                        return (
-                          <Badge
-                            variant={
-                              status === "Closed"
-                                ? "secondary"
-                                : status === "Closing Soon"
-                                  ? "destructive"
-                                  : "default"
-                            }
-                            className={
-                              status === "Closing Soon"
-                                ? "bg-amber-500/15 text-amber-700 border-amber-200"
-                                : ""
-                            }
-                          >
-                            {status}
-                          </Badge>
-                        );
+                {data.length === 0 ? (
+                  <div className="flex min-h-72 flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center">
+                    <GraduationCap className="h-10 w-10 text-muted-foreground" />
+                    <h3 className="mt-4 text-lg font-semibold text-foreground">
+                      No scholarships yet
+                    </h3>
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                      The admin needs to create the first scholarship record. Click Add New to add a title, deadline, amount, and application link.
+                    </p>
+                    <Button className="mt-5" onClick={openCreate}>
+                      Add First Scholarship
+                    </Button>
+                  </div>
+                ) : (
+                  <DataTable
+                    title="Scholarships"
+                    data={data}
+                    searchKey="title"
+                    onAdd={openCreate}
+                    onEdit={openEdit}
+                    onDelete={handleDelete}
+                    columns={[
+                      {
+                        key: "title",
+                        label: "Title",
+                        render: (item) => (
+                          <span className="font-medium">{item.title}</span>
+                        ),
                       },
-                    },
-                    {
-                      key: "url",
-                      label: "Link",
-                      render: (item) => (
-                        <a
-                          href={item.url}
-                          target={item.openInNewTab ? "_blank" : "_self"}
-                          rel="noreferrer"
-                          className="text-primary underline-offset-2 hover:underline"
-                        >
-                          Open link
-                        </a>
-                      ),
-                    },
-                  ]}
-                />
+                      {
+                        key: "amount",
+                        label: "Amount",
+                        render: (item) => (
+                          <span className="text-muted-foreground">
+                            {item.amount}
+                          </span>
+                        ),
+                      },
+                      {
+                        key: "deadline",
+                        label: "Deadline",
+                        render: (item) => (
+                          <span className="inline-flex items-center gap-1.5 text-sm">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            {formatDeadline(item.deadline)}
+                          </span>
+                        ),
+                      },
+                      {
+                        key: "status",
+                        label: "Status",
+                        render: (item) => {
+                          const status = getStatus(item);
+                          return (
+                            <Badge
+                              variant={
+                                status === "Closed"
+                                  ? "secondary"
+                                  : status === "Closing Soon"
+                                    ? "destructive"
+                                    : "default"
+                              }
+                              className={
+                                status === "Closing Soon"
+                                  ? "bg-amber-500/15 text-amber-700 border-amber-200"
+                                  : ""
+                              }
+                            >
+                              {status}
+                            </Badge>
+                          );
+                        },
+                      },
+                      {
+                        key: "url",
+                        label: "Link",
+                        render: (item) => (
+                          <a
+                            href={item.url}
+                            target={item.openInNewTab ? "_blank" : "_self"}
+                            rel="noreferrer"
+                            className="text-primary underline-offset-2 hover:underline"
+                          >
+                            Open link
+                          </a>
+                        ),
+                      },
+                    ]}
+                  />
+                )}
               </CardContent>
             </Card>
 
