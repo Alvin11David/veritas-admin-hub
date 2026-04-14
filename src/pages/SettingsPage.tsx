@@ -17,9 +17,15 @@ import { useAppSettings } from "@/lib/app-settings";
 export default function SettingsPage() {
   const { settings, setAppSettings, resetAppSettings } = useAppSettings();
   const [softwareName, setSoftwareNameInput] = useState(settings.softwareName);
-  const [softwareTagline, setSoftwareTagline] = useState(settings.softwareTagline);
-  const [dashboardWelcome, setDashboardWelcome] = useState(settings.dashboardWelcome);
-  const [showNotificationDot, setShowNotificationDot] = useState(settings.showNotificationDot);
+  const [softwareTagline, setSoftwareTagline] = useState(
+    settings.softwareTagline,
+  );
+  const [dashboardWelcome, setDashboardWelcome] = useState(
+    settings.dashboardWelcome,
+  );
+  const [showNotificationDot, setShowNotificationDot] = useState(
+    settings.showNotificationDot,
+  );
   const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
@@ -126,9 +132,12 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between gap-4 rounded-md border border-border p-3">
               <div>
-                <Label htmlFor="show-notification-dot">Header notification badge</Label>
+                <Label htmlFor="show-notification-dot">
+                  Header notification badge
+                </Label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Show a small status dot on the notification bell in the header.
+                  Show a small status dot on the notification bell in the
+                  header.
                 </p>
               </div>
               <Switch

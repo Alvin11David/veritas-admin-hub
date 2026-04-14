@@ -15,7 +15,9 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">{settings.dashboardWelcome}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {settings.dashboardWelcome}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="border-border">
@@ -35,7 +37,9 @@ export default function Dashboard() {
 
       <div className="grid lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 rounded-lg border border-border bg-card p-4">
-          <h2 className="font-semibold text-foreground mb-3">Recent Activity</h2>
+          <h2 className="font-semibold text-foreground mb-3">
+            Recent Activity
+          </h2>
           <ActivityFeed items={recentActivity} />
         </div>
         <div className="rounded-lg border border-border bg-card p-4">

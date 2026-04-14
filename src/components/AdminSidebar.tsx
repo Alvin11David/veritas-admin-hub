@@ -118,7 +118,9 @@ export function AdminSidebar() {
             <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
               {softwareName}
             </h2>
-            <p className="text-xs text-muted-foreground truncate">{softwareTagline}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {softwareTagline}
+            </p>
           </div>
         )}
       </div>

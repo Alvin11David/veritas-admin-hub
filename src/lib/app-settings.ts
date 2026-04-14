@@ -43,7 +43,10 @@ export function getAppSettings(): AppSettings {
   try {
     const parsed = JSON.parse(raw) as Partial<AppSettings>;
     return {
-      softwareName: normalizeText(parsed.softwareName ?? APP_SETTINGS_DEFAULTS.softwareName, DEFAULT_SOFTWARE_NAME),
+      softwareName: normalizeText(
+        parsed.softwareName ?? APP_SETTINGS_DEFAULTS.softwareName,
+        DEFAULT_SOFTWARE_NAME,
+      ),
       softwareTagline: normalizeText(
         parsed.softwareTagline ?? APP_SETTINGS_DEFAULTS.softwareTagline,
         DEFAULT_SOFTWARE_TAGLINE,
@@ -70,8 +73,14 @@ export function saveAppSettings(next: Partial<AppSettings>) {
 
   const normalized: AppSettings = {
     softwareName: normalizeText(merged.softwareName, DEFAULT_SOFTWARE_NAME),
-    softwareTagline: normalizeText(merged.softwareTagline, DEFAULT_SOFTWARE_TAGLINE),
-    dashboardWelcome: normalizeText(merged.dashboardWelcome, DEFAULT_DASHBOARD_WELCOME),
+    softwareTagline: normalizeText(
+      merged.softwareTagline,
+      DEFAULT_SOFTWARE_TAGLINE,
+    ),
+    dashboardWelcome: normalizeText(
+      merged.dashboardWelcome,
+      DEFAULT_DASHBOARD_WELCOME,
+    ),
     showNotificationDot: Boolean(merged.showNotificationDot),
   };
 
