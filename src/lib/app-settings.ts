@@ -140,7 +140,8 @@ export function getAppSettings(): AppSettings {
         "",
       ),
       organizationWhatsappCta: normalizeText(
-        parsed.organizationWhatsappCta ?? APP_SETTINGS_DEFAULTS.organizationWhatsappCta,
+        parsed.organizationWhatsappCta ??
+          APP_SETTINGS_DEFAULTS.organizationWhatsappCta,
         "",
       ),
       organizationAddress: normalizeText(
