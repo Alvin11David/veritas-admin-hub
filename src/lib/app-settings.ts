@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
+import { db } from "@/config/firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  onSnapshot,
+  DocumentSnapshot,
+} from "firebase/firestore";
 
-const APP_SETTINGS_STORAGE_KEY = "veritas-admin-hub.app-settings";
-const APP_SETTINGS_UPDATED_EVENT = "veritas-admin-hub.app-settings-updated";
+const FIRESTORE_COLLECTION = "appSettings";
+const FIRESTORE_DOC_ID = "admin";
 
 export const DEFAULT_SOFTWARE_NAME = "Application Management";
 export const DEFAULT_SOFTWARE_TAGLINE = "Admin Panel";
