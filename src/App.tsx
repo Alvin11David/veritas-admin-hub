@@ -18,7 +18,7 @@ import QuickLinksPage from "@/pages/QuickLinksPage";
 import ResearchPage from "@/pages/ResearchPage";
 import AlumniPage from "@/pages/AlumniPage";
 import SettingsPage from "@/pages/SettingsPage";
-import ScholarshipsPage from "@/pages/ScholarshipsPage";
+import ScholarshipsPage from "./pages/ScholarshipsPage";
 import StudentStoriesPage from "@/pages/StudentStoriesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound.tsx";
