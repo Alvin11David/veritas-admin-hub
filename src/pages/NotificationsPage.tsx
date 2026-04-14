@@ -134,7 +134,7 @@ export default function NotificationsPage() {
                       <span className="text-muted-foreground">
                         {item.user || "Admin"}
                       </span>{" "}
-                      {item.action.toLowerCase()}
+                      {item.action.toLowerCase() || "did something to"}
                       <span className="font-medium">{item.target}</span>
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
