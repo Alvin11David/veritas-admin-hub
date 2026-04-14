@@ -6,12 +6,23 @@ const APP_SETTINGS_UPDATED_EVENT = "veritas-admin-hub.app-settings-updated";
 export const DEFAULT_SOFTWARE_NAME = "Application Management";
 export const DEFAULT_SOFTWARE_TAGLINE = "Admin Panel";
 export const DEFAULT_DASHBOARD_WELCOME = "Welcome back, Admin";
+export const DEFAULT_TIMEZONE = "UTC";
+
+export const DATE_FORMAT_OPTIONS = ["MM/DD/YYYY", "DD/MM/YYYY", "YYYY-MM-DD"] as const;
+export const TIME_FORMAT_OPTIONS = ["12h", "24h"] as const;
+
+export type DateFormat = (typeof DATE_FORMAT_OPTIONS)[number];
+export type TimeFormat = (typeof TIME_FORMAT_OPTIONS)[number];
 
 export interface AppSettings {
   softwareName: string;
   softwareTagline: string;
   dashboardWelcome: string;
   showNotificationDot: boolean;
+  timezone: string;
+  dateFormat: DateFormat;
+  timeFormat: TimeFormat;
+  maintenanceMode: boolean;
 }
 
 export const APP_SETTINGS_DEFAULTS: AppSettings = {
@@ -19,6 +30,10 @@ export const APP_SETTINGS_DEFAULTS: AppSettings = {
   softwareTagline: DEFAULT_SOFTWARE_TAGLINE,
   dashboardWelcome: DEFAULT_DASHBOARD_WELCOME,
   showNotificationDot: true,
+  timezone: DEFAULT_TIMEZONE,
+  dateFormat: "MM/DD/YYYY",
+  timeFormat: "12h",
+  maintenanceMode: false,
 };
 
 function normalizeText(value: string, fallback: string) {
@@ -28,6 +43,32 @@ function normalizeText(value: string, fallback: string) {
 
 function canUseWindow() {
   return typeof window !== "undefined";
+}
+
+function normalizeDateFormat(value: string | undefined): DateFormat {
+  return DATE_FORMAT_OPTIONS.includes(value as DateFormat)
+    ? (value as DateFormat)
+    : APP_SETTINGS_DEFAULTS.dateFormat;
+}
+
+function normalizeTimeFormat(value: string | undefined): TimeFormat {
+  return TIME_FORMAT_OPTIONS.includes(value as TimeFormat)
+    ? (value as TimeFormat)
+    : APP_SETTINGS_DEFAULTS.timeFormat;
+}
+
+function normalizeTimezone(value: string | undefined): string {
+  const candidate = (value ?? "").trim();
+  if (candidate.length === 0) {
+    return APP_SETTINGS_DEFAULTS.timezone;
+  }
+
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: candidate });
+    return candidate;
+  } catch {
+    return APP_SETTINGS_DEFAULTS.timezone;
+  }
 }
 
 export function getAppSettings(): AppSettings {
@@ -59,6 +100,13 @@ export function getAppSettings(): AppSettings {
         typeof parsed.showNotificationDot === "boolean"
           ? parsed.showNotificationDot
           : APP_SETTINGS_DEFAULTS.showNotificationDot,
+      timezone: normalizeTimezone(parsed.timezone),
+      dateFormat: normalizeDateFormat(parsed.dateFormat),
+      timeFormat: normalizeTimeFormat(parsed.timeFormat),
+      maintenanceMode:
+        typeof parsed.maintenanceMode === "boolean"
+          ? parsed.maintenanceMode
+          : APP_SETTINGS_DEFAULTS.maintenanceMode,
     };
   } catch {
     return APP_SETTINGS_DEFAULTS;
@@ -82,6 +130,10 @@ export function saveAppSettings(next: Partial<AppSettings>) {
       DEFAULT_DASHBOARD_WELCOME,
     ),
     showNotificationDot: Boolean(merged.showNotificationDot),
+    timezone: normalizeTimezone(merged.timezone),
+    dateFormat: normalizeDateFormat(merged.dateFormat),
+    timeFormat: normalizeTimeFormat(merged.timeFormat),
+    maintenanceMode: Boolean(merged.maintenanceMode),
   };
 
   if (canUseWindow()) {
