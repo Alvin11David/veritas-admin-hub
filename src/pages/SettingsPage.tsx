@@ -6,6 +6,7 @@ import {
   Save,
   RotateCcw,
   Wrench,
+  Globe,
 } from "lucide-react";
 import {
   Card,
@@ -52,6 +53,24 @@ export default function SettingsPage() {
   const [timeFormat, setTimeFormat] = useState<TimeFormat>(settings.timeFormat);
   const [maintenanceMode, setMaintenanceMode] = useState(
     settings.maintenanceMode,
+  );
+  const [studentPortalName, setStudentPortalName] = useState(
+    settings.studentPortalName,
+  );
+  const [organizationMission, setOrganizationMission] = useState(
+    settings.organizationMission,
+  );
+  const [organizationEmail, setOrganizationEmail] = useState(
+    settings.organizationEmail,
+  );
+  const [organizationPhone, setOrganizationPhone] = useState(
+    settings.organizationPhone,
+  );
+  const [organizationWhatsappCta, setOrganizationWhatsappCta] = useState(
+    settings.organizationWhatsappCta,
+  );
+  const [organizationAddress, setOrganizationAddress] = useState(
+    settings.organizationAddress,
   );
   const [statusMessage, setStatusMessage] = useState("");
 
