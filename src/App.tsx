@@ -19,6 +19,7 @@ import ResearchPage from "@/pages/ResearchPage";
 import AlumniPage from "@/pages/AlumniPage";
 import SettingsPage from "@/pages/SettingsPage";
 import ScholarshipsPage from "@/pages/ScholarshipsPage";
+import StudentStoriesPage from "@/pages/StudentStoriesPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -46,7 +47,7 @@ const App = () => (
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/alumni" element={<AlumniPage />} />
             <Route path="/scholarships" element={<ScholarshipsPage />} />
-            <Route path="/student-stories" element={<PlaceholderPage />} />
+            <Route path="/student-stories" element={<StudentStoriesPage />} />
             <Route path="/legal" element={<PlaceholderPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
