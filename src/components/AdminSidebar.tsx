@@ -30,6 +30,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAppSettings } from "@/lib/app-settings";
 
 const mainItems = [{ title: "Dashboard", url: "/", icon: LayoutDashboard }];
 
@@ -99,17 +100,20 @@ function SidebarSection({
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const { settings } = useAppSettings();
+  const softwareName = settings.softwareName;
+  const softwareInitial = softwareName.charAt(0).toUpperCase() || "A";
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-          <span className="text-primary-foreground font-bold text-sm">V</span>
+          <span className="text-primary-foreground font-bold text-sm">{softwareInitial}</span>
         </div>
         {!collapsed && (
           <div className="min-w-0">
             <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
-              Application Management
+              {softwareName}
             </h2>
             <p className="text-xs text-muted-foreground">Admin Panel</p>
           </div>
