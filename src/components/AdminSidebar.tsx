@@ -102,6 +102,7 @@ export function AdminSidebar() {
   const collapsed = state === "collapsed";
   const { settings } = useAppSettings();
   const softwareName = settings.softwareName;
+  const softwareTagline = settings.softwareTagline;
   const softwareInitial = softwareName.charAt(0).toUpperCase() || "A";
 
   return (
@@ -117,7 +118,7 @@ export function AdminSidebar() {
             <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
               {softwareName}
             </h2>
-            <p className="text-xs text-muted-foreground">Admin Panel</p>
+            <p className="text-xs text-muted-foreground truncate">{softwareTagline}</p>
           </div>
         )}
       </div>
