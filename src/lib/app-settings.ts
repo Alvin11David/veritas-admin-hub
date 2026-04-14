@@ -37,7 +37,6 @@ export interface AppSettings {
   timeFormat: TimeFormat;
   maintenanceMode: boolean;
   studentPortalName: string;
-  ourMission: string;
   organizationMission: string;
   organizationEmail: string;
   organizationPhone: string;
@@ -55,7 +54,6 @@ export const APP_SETTINGS_DEFAULTS: AppSettings = {
   timeFormat: "12h",
   maintenanceMode: false,
   studentPortalName: "",
-  ourMission: "",
   organizationMission: "",
   organizationEmail: "",
   organizationPhone: "",
@@ -129,7 +127,6 @@ function normalizeFirestoreData(
       data.studentPortalName ?? APP_SETTINGS_DEFAULTS.studentPortalName,
       "",
     ),
-    ourMission: normalizeText(data.ourMission ?? APP_SETTINGS_DEFAULTS.ourMission, ""),
     organizationMission: normalizeText(
       data.organizationMission ?? APP_SETTINGS_DEFAULTS.organizationMission,
       "",
@@ -195,7 +192,6 @@ export async function saveAppSettingsToFirestore(
     timeFormat: normalizeTimeFormat(merged.timeFormat),
     maintenanceMode: Boolean(merged.maintenanceMode),
     studentPortalName: normalizeText(merged.studentPortalName, ""),
-    ourMission: normalizeText(merged.ourMission, ""),
     organizationMission: normalizeText(merged.organizationMission, ""),
     organizationEmail: normalizeText(merged.organizationEmail, ""),
     organizationPhone: normalizeText(merged.organizationPhone, ""),
