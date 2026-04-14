@@ -505,3 +505,4 @@ export default function SettingsPage() {
       </form>
     </div>
   );
+}
