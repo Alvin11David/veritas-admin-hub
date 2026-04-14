@@ -2,9 +2,20 @@ import { StatCard } from "@/components/StatCard";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { dashboardStats, recentActivity } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, Download } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  Download,
+  Gauge,
+  MessageSquareText,
+  Plus,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "@/lib/app-settings";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 function formatDateString(
   date: Date,
@@ -47,64 +58,140 @@ export default function Dashboard() {
     settings.timezone,
     settings.timeFormat,
   );
+  const totalContentModules = dashboardStats.length;
+  const activeQuickActions = [
+    { label: "Add News Article", path: "/news" },
+    { label: "Add Faculty Member", path: "/faculty" },
+    { label: "Create Event", path: "/events" },
+    { label: "View Submissions", path: "/submissions" },
+    { label: "Upload to Gallery", path: "/gallery" },
+  ];
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {settings.dashboardWelcome}
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Local system time: {formattedDate} {formattedTime} (
-            {settings.timezone})
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="border-border">
-            <Download className="h-4 w-4 mr-1" /> Export
-          </Button>
-          <Button size="sm" onClick={() => navigate("/news")}>
-            <Plus className="h-4 w-4 mr-1" /> New Article
-          </Button>
-        </div>
-      </div>
+      <Card className="overflow-hidden border-primary/20 bg-gradient-to-r from-primary/10 via-background to-background">
+        <CardContent className="p-6 md:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary" className="gap-1">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Admin Overview
+                </Badge>
+                <Badge variant="outline" className="gap-1">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  {formattedDate}
+                </Badge>
+              </div>
+              <div className="space-y-2 max-w-2xl">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                  {settings.softwareName}
+                </h1>
+                <p className="text-base text-muted-foreground md:text-lg">
+                  {settings.dashboardWelcome}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Local system time: {formattedTime} ({settings.timezone})
+                </p>
+              </div>
+            </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+            <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[420px]">
+              <Card className="border-border/70 bg-background/70 shadow-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Gauge className="h-4 w-4" />
+                    <span className="text-xs uppercase tracking-wider">Modules</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-foreground">{totalContentModules}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Managed sections</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border/70 bg-background/70 shadow-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MessageSquareText className="h-4 w-4" />
+                    <span className="text-xs uppercase tracking-wider">Activity</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-foreground">{recentActivity.length}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Recent updates</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-border/70 bg-background/70 shadow-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Sparkles className="h-4 w-4" />
+                    <span className="text-xs uppercase tracking-wider">Status</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-foreground">Live</p>
+                  <p className="text-xs text-muted-foreground mt-1">System ready</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Button onClick={() => navigate("/news")}>
+              <Plus className="h-4 w-4 mr-1" /> New Article
+            </Button>
+            <Button variant="outline" className="border-border">
+              <Download className="h-4 w-4 mr-1" /> Export
+            </Button>
+            <Button variant="outline" className="border-border" onClick={() => navigate("/notifications")}>
+              View Notifications <ArrowRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
         {dashboardStats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-lg border border-border bg-card p-4">
-          <h2 className="font-semibold text-foreground mb-3">
-            Recent Activity
-          </h2>
-          <ActivityFeed items={recentActivity} />
-        </div>
-        <div className="rounded-lg border border-border bg-card p-4">
-          <h2 className="font-semibold text-foreground mb-3">Quick Actions</h2>
-          <div className="space-y-2">
-            {[
-              { label: "Add News Article", path: "/news" },
-              { label: "Add Faculty Member", path: "/faculty" },
-              { label: "Create Event", path: "/events" },
-              { label: "View Submissions", path: "/submissions" },
-              { label: "Upload to Gallery", path: "/gallery" },
-            ].map((action) => (
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Card className="xl:col-span-2 border-border bg-card shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Sparkles className="h-4 w-4 text-primary" /> Recent Activity
+            </CardTitle>
+            <CardDescription>
+              Latest content and admin changes across the workspace.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ActivityFeed items={recentActivity} />
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Upload className="h-4 w-4 text-primary" /> Quick Actions
+            </CardTitle>
+            <CardDescription>
+              Jump into common admin tasks.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {activeQuickActions.map((action) => (
               <button
                 key={action.label}
                 onClick={() => navigate(action.path)}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2"
+                className="group flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-3 text-left text-sm text-foreground transition-colors hover:bg-secondary"
               >
-                <Plus className="h-3 w-3 text-primary" />
-                {action.label}
+                <span className="flex items-center gap-2">
+                  <Plus className="h-3.5 w-3.5 text-primary" />
+                  {action.label}
+                </span>
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
               </button>
             ))}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
