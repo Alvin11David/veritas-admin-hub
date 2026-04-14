@@ -115,12 +115,17 @@ export default function SettingsPage() {
                 Settings
               </h1>
               <p className="max-w-2xl text-sm text-muted-foreground">
-                Fine-tune branding, display format, and admin interface behavior from one place.
+                Fine-tune branding, display format, and admin interface behavior
+                from one place.
               </p>
             </div>
             <div className="rounded-lg border border-primary/20 bg-background/80 px-4 py-3 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">Current software name</p>
-              <p className="mt-1 text-sm font-semibold text-foreground">{softwareName || "Application Management"}</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                Current software name
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {softwareName || "Application Management"}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -134,7 +139,8 @@ export default function SettingsPage() {
                 <Paintbrush className="h-4 w-4 text-primary" /> Branding
               </CardTitle>
               <CardDescription>
-                Control the identity labels shown across navigation and dashboard.
+                Control the identity labels shown across navigation and
+                dashboard.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -152,7 +158,9 @@ export default function SettingsPage() {
                   placeholder="Enter software name"
                   maxLength={80}
                 />
-                <p className="text-xs text-muted-foreground">Empty value falls back to default automatically.</p>
+                <p className="text-xs text-muted-foreground">
+                  Empty value falls back to default automatically.
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -172,7 +180,9 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dashboard-welcome">Dashboard welcome text</Label>
+                <Label htmlFor="dashboard-welcome">
+                  Dashboard welcome text
+                </Label>
                 <Input
                   id="dashboard-welcome"
                   value={dashboardWelcome}
@@ -277,14 +287,19 @@ export default function SettingsPage() {
               <Wrench className="h-4 w-4 text-primary" /> Interface Controls
             </CardTitle>
             <CardDescription>
-              Toggle global behaviors for the admin navigation and status messaging.
+              Toggle global behaviors for the admin navigation and status
+              messaging.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
               <div className="space-y-1">
-                <Label htmlFor="show-notification-dot" className="flex items-center gap-2">
-                  <Bell className="h-3.5 w-3.5 text-muted-foreground" /> Header notification badge
+                <Label
+                  htmlFor="show-notification-dot"
+                  className="flex items-center gap-2"
+                >
+                  <Bell className="h-3.5 w-3.5 text-muted-foreground" /> Header
+                  notification badge
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   Show a small status dot on the top-right notification bell.
