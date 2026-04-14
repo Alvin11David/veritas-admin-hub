@@ -11,7 +11,6 @@ import {
   Award,
   DollarSign,
   MessageSquare,
-  FileText,
   Mail,
   Bell,
   Settings,
@@ -47,7 +46,6 @@ const contentItems = [
   { title: "Alumni", url: "/alumni", icon: Award },
   { title: "Scholarships", url: "/scholarships", icon: DollarSign },
   { title: "Student Stories", url: "/student-stories", icon: MessageSquare },
-  { title: "Legal Pages", url: "/legal", icon: FileText },
 ];
 
 const systemItems = [
