@@ -66,10 +66,6 @@ function normalizeText(value: string, fallback: string) {
   return trimmed.length > 0 ? trimmed : fallback;
 }
 
-function canUseWindow() {
-  return typeof window !== "undefined";
-}
-
 function normalizeDateFormat(value: string | undefined): DateFormat {
   return DATE_FORMAT_OPTIONS.includes(value as DateFormat)
     ? (value as DateFormat)
@@ -163,7 +159,15 @@ export async function getAppSettingsFromFirestore(): Promise<AppSettings> {
     if (docSnap.exists()) {
       return normalizeFirestoreData(docSnap.data() as Partial<AppSettings>);
     }
-async function saveAppSettingsToFirestore(
+
+    return APP_SETTINGS_DEFAULTS;
+  } catch (error) {
+    console.error("Error fetching app settings from Firestore:", error);
+    return APP_SETTINGS_DEFAULTS;
+  }
+}
+
+export async function saveAppSettingsToFirestore(
   current: AppSettings,
   next: Partial<AppSettings>,
 ): Promise<AppSettings> {
@@ -202,17 +206,11 @@ async function saveAppSettingsToFirestore(
   } catch (error) {
     console.error("Error saving app settings to Firestore:", error);
     throw error;
-  }) {
-    window.localStorage.setItem(
-      APP_SETTINGS_STORAGE_KEY,
-      JSON.stringify(normalized),
-    );
-    window.dispatchEvent(new Event(APP_SETTINGS_UPDATED_EVENT));
   }
-
-  return normalized;
 }
-APP_SETTINGS_DEFAULTS);
+
+export function useAppSettings() {
+  const [settings, setSettings] = useState<AppSettings>(APP_SETTINGS_DEFAULTS);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -270,9 +268,7 @@ APP_SETTINGS_DEFAULTS);
   return {
     settings,
     loading,
-    setAppSettings
     setAppSettings,
-    setSoftwareName,
     resetAppSettings,
   };
 }
