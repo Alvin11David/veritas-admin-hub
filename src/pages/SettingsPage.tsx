@@ -510,9 +510,15 @@ export default function SettingsPage() {
 
             <div className="flex flex-wrap items-center gap-2">
               <Button type="submit" className="min-w-36" disabled={isSaving}>
-                <Save className="h-4 w-4" /> {isSaving ? "Saving..." : "Save Settings"}
+                <Save className="h-4 w-4" />{" "}
+                {isSaving ? "Saving..." : "Save Settings"}
               </Button>
-              <Button type="button" variant="outline" onClick={onReset} disabled={isSaving}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onReset}
+                disabled={isSaving}
+              >
                 <RotateCcw className="h-4 w-4" /> Reset Defaults
               </Button>
               {statusMessage && (
