@@ -16,7 +16,8 @@ export interface NotificationPayload {
     | "quick-links"
     | "research"
     | "alumni"
-    | "scholarships";
+    | "scholarships"
+    | "student-stories";
   user?: string;
 }
 
