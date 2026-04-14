@@ -73,6 +73,7 @@ export default function SettingsPage() {
     settings.organizationAddress,
   );
   const [statusMessage, setStatusMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setSoftwareNameInput(settings.softwareName);
@@ -91,58 +92,46 @@ export default function SettingsPage() {
     setOrganizationAddress(settings.organizationAddress);
   }, [settings]);
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const updated = setAppSettings({
-      softwareName,
-      softwareTagline,
-      dashboardWelcome,
-      showNotificationDot,
-      timezone,
-      dateFormat,
-      timeFormat,
-      maintenanceMode,
-      studentPortalName,
-      organizationMission,
-      organizationEmail,
-      organizationPhone,
-      organizationWhatsappCta,
-      organizationAddress,
-    });
-    setSoftwareNameInput(updated.softwareName);
-    setSoftwareTagline(updated.softwareTagline);
-    setDashboardWelcome(updated.dashboardWelcome);
-    setShowNotificationDot(updated.showNotificationDot);
-    setTimezone(updated.timezone);
-    setDateFormat(updated.dateFormat);
-    setTimeFormat(updated.timeFormat);
-    setMaintenanceMode(updated.maintenanceMode);
-    setStudentPortalName(updated.studentPortalName);
-    setOrganizationMission(updated.organizationMission);
-    setOrganizationEmail(updated.organizationEmail);
-    setOrganizationPhone(updated.organizationPhone);
-    setOrganizationWhatsappCta(updated.organizationWhatsappCta);
-    setOrganizationAddress(updated.organizationAddress);
-    setStatusMessage("Settings saved.");
+    setIsSaving(true);
+    try {
+      await setAppSettings({
+        softwareName,
+        softwareTagline,
+        dashboardWelcome,
+        showNotificationDot,
+        timezone,
+        dateFormat,
+        timeFormat,
+        maintenanceMode,
+        studentPortalName,
+        organizationMission,
+        organizationEmail,
+        organizationPhone,
+        organizationWhatsappCta,
+        organizationAddress,
+      });
+      setStatusMessage("Settings saved successfully.");
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      setStatusMessage("Failed to save settings. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const onReset = () => {
-    const updated = resetAppSettings();
-    setSoftwareNameInput(updated.softwareName);
-    setSoftwareTagline(updated.softwareTagline);
-    setDashboardWelcome(updated.dashboardWelcome);
-    setShowNotificationDot(updated.showNotificationDot);
-    setTimezone(updated.timezone);
-    setDateFormat(updated.dateFormat);
-    setTimeFormat(updated.timeFormat);
-    setMaintenanceMode(updated.maintenanceMode);
-    setStudentPortalName(updated.studentPortalName);
-    setOrganizationMission(updated.organizationMission);
-    setOrganizationEmail(updated.organizationEmail);
-    setOrganizationPhone(updated.organizationPhone);
-    setOrganizationWhatsappCta(updated.organizationWhatsappCta);
-    setOrganizationAddress(updated.organizationAddress);
-    setStatusMessage("Settings reset to defaults.");
+  const onReset = async () => {
+    setIsSaving(true);
+    try {
+      await resetAppSettings();
+      setStatusMessage("Settings reset to defaults.");
+    } catch (error) {
+      console.error("Error resetting settings:", error);
+      setStatusMessage("Failed to reset settings. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -507,10 +496,10 @@ export default function SettingsPage() {
               <Button type="button" variant="outline" onClick={onReset}>
                 <RotateCcw className="h-4 w-4" /> Reset Defaults
               </Button>
-              {statusMessage && (
-                <p className="text-sm text-muted-foreground">{statusMessage}</p>
-              )}
-            </div>
+              {statusMessage && ( disabled={isSaving}>
+                <Save className="h-4 w-4" /> {isSaving ? "Saving..." : "Save Settings"}
+              </Button>
+              <Button type="button" variant="outline" onClick={onReset} disabled={isSaving
           </CardContent>
         </Card>
       </form>
