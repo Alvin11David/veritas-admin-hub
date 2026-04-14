@@ -3,12 +3,26 @@ import { Loader2, MessageSquareText, Users, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { DataTable } from "@/components/DataTable";
 import { FormDialog, type FormField } from "@/components/FormDialog";
 import { db } from "@/config/firebase";
 import { createAdminNotification } from "@/lib/notifications";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 
 type StoryStatus = "Published" | "Draft";
 
@@ -40,13 +54,48 @@ interface StudentStoryForm {
 }
 
 const fields: FormField[] = [
-  { key: "title", label: "Story Title", type: "text", placeholder: "From Campus Start to Career Launch" },
-  { key: "studentName", label: "Student Name", type: "text", placeholder: "Jane Doe" },
-  { key: "program", label: "Program", type: "text", placeholder: "Bachelor of Science in Computer Science" },
-  { key: "excerpt", label: "Short Excerpt", type: "textarea", placeholder: "A short intro shown in the stories list." },
-  { key: "story", label: "Full Story", type: "textarea", placeholder: "Write the full student story here." },
-  { key: "imageUrl", label: "Image URL", type: "text", placeholder: "https://..." },
-  { key: "displayOrder", label: "Display Order", type: "number", placeholder: "1" },
+  {
+    key: "title",
+    label: "Story Title",
+    type: "text",
+    placeholder: "From Campus Start to Career Launch",
+  },
+  {
+    key: "studentName",
+    label: "Student Name",
+    type: "text",
+    placeholder: "Jane Doe",
+  },
+  {
+    key: "program",
+    label: "Program",
+    type: "text",
+    placeholder: "Bachelor of Science in Computer Science",
+  },
+  {
+    key: "excerpt",
+    label: "Short Excerpt",
+    type: "textarea",
+    placeholder: "A short intro shown in the stories list.",
+  },
+  {
+    key: "story",
+    label: "Full Story",
+    type: "textarea",
+    placeholder: "Write the full student story here.",
+  },
+  {
+    key: "imageUrl",
+    label: "Image URL",
+    type: "text",
+    placeholder: "https://...",
+  },
+  {
+    key: "displayOrder",
+    label: "Display Order",
+    type: "number",
+    placeholder: "1",
+  },
   { key: "featured", label: "Featured", type: "toggle" },
   { key: "active", label: "Active", type: "toggle" },
 ];
@@ -130,7 +179,13 @@ export default function StudentStoriesPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.studentName || !form.program || !form.excerpt || !form.story) {
+    if (
+      !form.title ||
+      !form.studentName ||
+      !form.program ||
+      !form.excerpt ||
+      !form.story
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -160,7 +215,10 @@ export default function StudentStoriesPage() {
             module: "student-stories",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Student story updated");
       } else {
@@ -176,7 +234,10 @@ export default function StudentStoriesPage() {
             module: "student-stories",
           });
         } catch (notificationError) {
-          console.error("Error creating activity notification:", notificationError);
+          console.error(
+            "Error creating activity notification:",
+            notificationError,
+          );
         }
         toast.success("Student story created");
       }
@@ -202,7 +263,10 @@ export default function StudentStoriesPage() {
           module: "student-stories",
         });
       } catch (notificationError) {
-        console.error("Error creating activity notification:", notificationError);
+        console.error(
+          "Error creating activity notification:",
+          notificationError,
+        );
       }
       toast.success("Student story deleted");
       await fetchStories();
@@ -228,19 +292,25 @@ export default function StudentStoriesPage() {
           <Card className="border-border/80 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <MessageSquareText className="h-4 w-4 text-primary" /> Student Stories
+                <MessageSquareText className="h-4 w-4 text-primary" /> Student
+                Stories
               </CardTitle>
               <CardDescription>
-                Admins manage student story entries here. Add, edit, or delete stories for the public-facing section.
+                Admins manage student story entries here. Add, edit, or delete
+                stories for the public-facing section.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {data.length === 0 ? (
                 <div className="flex min-h-72 flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center">
                   <Users className="h-10 w-10 text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-semibold text-foreground">No student stories yet</h3>
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">
+                    No student stories yet
+                  </h3>
                   <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                    The admin needs to create the first student story record. Click Add New to add a title, student name, program, and full story.
+                    The admin needs to create the first student story record.
+                    Click Add New to add a title, student name, program, and
+                    full story.
                   </p>
                   <Button className="mt-5" onClick={openCreate}>
                     Add First Student Story
@@ -258,17 +328,27 @@ export default function StudentStoriesPage() {
                     {
                       key: "title",
                       label: "Title",
-                      render: (item) => <span className="font-medium">{item.title}</span>,
+                      render: (item) => (
+                        <span className="font-medium">{item.title}</span>
+                      ),
                     },
                     {
                       key: "studentName",
                       label: "Student",
-                      render: (item) => <span className="text-muted-foreground">{item.studentName}</span>,
+                      render: (item) => (
+                        <span className="text-muted-foreground">
+                          {item.studentName}
+                        </span>
+                      ),
                     },
                     {
                       key: "program",
                       label: "Program",
-                      render: (item) => <span className="text-muted-foreground">{item.program}</span>,
+                      render: (item) => (
+                        <span className="text-muted-foreground">
+                          {item.program}
+                        </span>
+                      ),
                     },
                     {
                       key: "displayOrder",
@@ -279,7 +359,9 @@ export default function StudentStoriesPage() {
                       key: "featured",
                       label: "Featured",
                       render: (item) => (
-                        <Badge variant={item.featured ? "default" : "secondary"}>
+                        <Badge
+                          variant={item.featured ? "default" : "secondary"}
+                        >
                           {item.featured ? "Yes" : "No"}
                         </Badge>
                       ),
@@ -290,7 +372,11 @@ export default function StudentStoriesPage() {
                       render: (item) => {
                         const status = getStatus(item);
                         return (
-                          <Badge variant={status === "Published" ? "default" : "secondary"}>
+                          <Badge
+                            variant={
+                              status === "Published" ? "default" : "secondary"
+                            }
+                          >
                             {status}
                           </Badge>
                         );
@@ -303,7 +389,8 @@ export default function StudentStoriesPage() {
           </Card>
 
           <p className="text-xs text-muted-foreground">
-            {publishedCount} published student story{publishedCount === 1 ? "" : "s"}
+            {publishedCount} published student story
+            {publishedCount === 1 ? "" : "s"}
           </p>
         </div>
       )}
@@ -314,7 +401,9 @@ export default function StudentStoriesPage() {
         title={editing ? "Edit Student Story" : "New Student Story"}
         fields={fields}
         values={form}
-        onChange={(k, v) => setForm((current) => ({ ...current, [k]: v as never }))}
+        onChange={(k, v) =>
+          setForm((current) => ({ ...current, [k]: v as never }))
+        }
         onSubmit={handleSubmit}
         submitLabel={submitting ? "Saving..." : "Save"}
         disabled={submitting}
